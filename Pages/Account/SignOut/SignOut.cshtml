@@ -1,0 +1,65 @@
+@page "/Account/SignOut"
+@model SignOutModel
+
+@{
+    ViewData["Title"] = "Sign Out";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/signout.css"
+          asp-append-version="true" />
+}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <div class="auth-header">
+            <span class="auth-eyebrow">KEEPTRACK</span>
+
+            <h1>Sign out</h1>
+
+            <p>
+                Are you sure you want to sign out of your
+                KeepTrack account?
+            </p>
+        </div>
+
+
+        <!-- =====================================================
+             SIGN OUT FORM
+             ===================================================== -->
+
+        <form method="post" id="sign-out-form">
+
+            <button type="submit"
+                    class="auth-submit-button"
+                    id="sign-out-submit"
+                    data-submitting="Signing out...">
+                Sign out
+            </button>
+
+        </form>
+
+
+        <!-- =====================================================
+             FOOTER — CANCEL
+             ===================================================== -->
+
+        <div class="auth-footer">
+            <a asp-page="/Dashboard/Dashboard">Cancel</a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/signout.js"
+            asp-append-version="true"></script>
+}

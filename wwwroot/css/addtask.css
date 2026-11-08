@@ -1,0 +1,790 @@
+/* =====================================================
+   KEEP TRACK — ADD TASK PAGE
+   Matches the light SaaS dashboard reference
+   ===================================================== */
+
+/* ---------- Design Tokens ---------- */
+:root {
+    /* Canvas */
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    /* Borders */
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    /* Text */
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    /* Accents */
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-info: #3b82f6;
+    --kt-info-soft: #e6efff;
+    --kt-info-text: #1e40af;
+
+    /* Radii */
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    /* Shadows */
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Page Wrapper ---------- */
+.add-task-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+/* ---------- Page Header ---------- */
+.add-task-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    padding: 22px 26px;
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.add-task-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+    margin-bottom: 6px;
+}
+
+.add-task-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+    color: var(--kt-text);
+}
+
+.add-task-header p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--kt-text-muted);
+    max-width: 520px;
+    line-height: 1.5;
+}
+
+/* ---------- Back Button ---------- */
+.add-task-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border: 1px solid var(--kt-border-strong);
+    transition: all var(--kt-transition);
+    white-space: nowrap;
+}
+
+.add-task-back-button::before {
+    content: "←";
+    font-weight: 700;
+    transition: transform var(--kt-transition);
+}
+
+.add-task-back-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+.add-task-back-button:hover::before {
+    transform: translateX(-3px);
+}
+
+/* ---------- Form Card ---------- */
+.add-task-card {
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    padding: 28px;
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.add-task-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ---------- Form Sections ---------- */
+.add-task-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 0;
+    border-top: 1px solid var(--kt-border);
+}
+
+.add-task-form-section:first-of-type {
+    padding-top: 0;
+    border-top: none;
+}
+
+.add-task-form-section:last-of-type {
+    padding-bottom: 4px;
+}
+
+.add-task-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.add-task-section-header h2 {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--kt-text);
+}
+
+.add-task-section-header p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--kt-text-muted);
+    line-height: 1.5;
+}
+
+/* ---------- Form Groups ---------- */
+.add-task-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.add-task-form-group > label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+    letter-spacing: 0.01em;
+}
+
+/* ---------- Inputs & Textareas ---------- */
+.add-task-input,
+.add-task-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--kt-radius);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.5;
+    outline: none;
+    transition: all var(--kt-transition);
+}
+
+.add-task-input::placeholder,
+.add-task-textarea::placeholder {
+    color: var(--kt-text-soft);
+}
+
+.add-task-input:hover,
+.add-task-textarea:hover {
+    border-color: #cbd2dd;
+}
+
+.add-task-input:focus,
+.add-task-textarea:focus {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 3px rgba(18, 23, 43, 0.08);
+}
+
+.add-task-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Select arrow consistency */
+select.add-task-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* ---------- Date/Time Row ---------- */
+.add-task-date-time-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.add-task-date-time-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.add-task-date-time-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+/* Chrome/Safari date & time inputs — keep native pickers, tidy visuals */
+.add-task-input[type="date"],
+.add-task-input[type="time"] {
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.add-task-input[type="date"]::-webkit-calendar-picker-indicator,
+.add-task-input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity var(--kt-transition);
+}
+
+.add-task-input[type="date"]:hover::-webkit-calendar-picker-indicator,
+.add-task-input[type="time"]:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+/* ---------- Radio Group (Start date) ---------- */
+.add-task-radio-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-pill);
+    padding: 4px;
+    width: fit-content;
+}
+
+.add-task-radio-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text-muted);
+    cursor: pointer;
+    transition: all var(--kt-transition);
+    user-select: none;
+    white-space: nowrap;
+}
+
+.add-task-radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.add-task-radio-option:hover {
+    color: var(--kt-text);
+}
+
+.add-task-radio-option input[type="radio"]:checked + span {
+    color: var(--kt-primary-contrast);
+}
+
+/* Filled pill background on the checked option */
+.add-task-radio-option:has(input[type="radio"]:checked) {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+/* Focus ring for accessibility */
+.add-task-radio-option:has(input[type="radio"]:focus-visible) {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Checkbox (Reminder) ---------- */
+.add-task-checkbox-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: var(--kt-radius);
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kt-text);
+    cursor: pointer;
+    transition: all var(--kt-transition);
+    width: fit-content;
+    user-select: none;
+}
+
+.add-task-checkbox-option:hover {
+    border-color: var(--kt-border-strong);
+    background: var(--kt-surface-tint);
+}
+
+.add-task-checkbox-option input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    cursor: pointer;
+    position: relative;
+    transition: all var(--kt-transition);
+    flex-shrink: 0;
+}
+
+.add-task-checkbox-option input[type="checkbox"]:hover {
+    border-color: var(--kt-text-soft);
+}
+
+.add-task-checkbox-option input[type="checkbox"]:checked {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+}
+
+.add-task-checkbox-option input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 11px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.add-task-checkbox-option input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+.add-task-checkbox-option input[type="checkbox"]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.add-task-checkbox-option:has(input[type="checkbox"]:disabled) {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: var(--kt-surface-tint);
+}
+
+/* ---------- Reminder Block ---------- */
+.add-task-reminder-note {
+    display: block;
+    font-size: 12.5px;
+    color: var(--kt-text-muted);
+    line-height: 1.5;
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--kt-info-soft);
+    border-radius: var(--kt-radius-sm);
+    border-left: 3px solid var(--kt-info);
+}
+
+.add-task-reminder-note[hidden] {
+    display: none;
+}
+
+#reminder-requirement-message {
+    color: var(--kt-info-text);
+}
+
+.add-task-reminder-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    margin-top: 4px;
+}
+
+.add-task-reminder-options[hidden] {
+    display: none;
+}
+
+/* Reminder schedule grid */
+.add-task-reminder-schedule {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.add-task-reminder-interval,
+.add-task-reminder-unit,
+.add-task-reminder-time {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.add-task-reminder-interval[hidden],
+.add-task-reminder-unit[hidden],
+.add-task-reminder-time[hidden] {
+    display: none;
+}
+
+.add-task-reminder-interval label,
+.add-task-reminder-unit label,
+.add-task-reminder-time label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+/* Interval helper text */
+#reminder-interval-field small {
+    display: block;
+    font-size: 12px;
+    color: var(--kt-text-soft);
+    line-height: 1.45;
+    margin-top: 4px;
+}
+
+/* ---------- Validation ---------- */
+.add-task-validation {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--kt-danger-text);
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+.add-task-validation:empty {
+    display: none;
+}
+
+/* The summary box (asp-validation-summary) */
+.add-task-validation[role="alert"],
+.add-task-validation.validation-summary-errors,
+.add-task-validation.validation-summary-valid {
+    display: block;
+    padding: 14px 18px;
+    border-radius: var(--kt-radius);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.add-task-validation.validation-summary-errors {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-left: 3px solid var(--kt-danger);
+}
+
+.add-task-validation.validation-summary-errors ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+}
+
+.add-task-validation.validation-summary-valid {
+    display: none;
+}
+
+/* Invalid input state (jQuery validation adds .input-validation-error) */
+.add-task-input.input-validation-error,
+.add-task-textarea.input-validation-error {
+    border-color: var(--kt-danger);
+    background: #fff5f5;
+}
+
+.add-task-input.input-validation-error:focus,
+.add-task-textarea.input-validation-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* ---------- Form Actions ---------- */
+.add-task-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 22px;
+    margin-top: 4px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.add-task-cancel-button,
+.add-task-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--kt-transition);
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.add-task-cancel-button {
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border-color: var(--kt-border-strong);
+}
+
+.add-task-cancel-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-text-soft);
+}
+
+.add-task-submit-button {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.add-task-submit-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.add-task-submit-button:active {
+    transform: translateY(0);
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .add-task-header {
+        padding: 18px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .add-task-header h1 {
+        font-size: 22px;
+    }
+
+    .add-task-back-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .add-task-card {
+        padding: 20px;
+    }
+
+    .add-task-form-section {
+        padding: 20px 0;
+    }
+
+    .add-task-date-time-row,
+    .add-task-reminder-schedule {
+        grid-template-columns: 1fr;
+    }
+
+    .add-task-radio-group {
+        width: 100%;
+    }
+
+    .add-task-radio-option {
+        flex: 1;
+    }
+
+    .add-task-checkbox-option {
+        width: 100%;
+    }
+
+    .add-task-actions {
+        flex-direction: column-reverse;
+    }
+
+    .add-task-cancel-button,
+    .add-task-submit-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .add-task-card {
+        padding: 16px;
+    }
+
+    .add-task-header {
+        padding: 16px;
+    }
+
+    .add-task-header h1 {
+        font-size: 20px;
+    }
+}
+
+/* =====================================================
+   FOCUS STATES
+   ===================================================== */
+
+.add-task-input:focus-visible,
+.add-task-textarea:focus-visible,
+.add-task-input:focus,
+.add-task-textarea:focus {
+    outline: none;
+}
+
+.add-task-cancel-button:focus-visible,
+.add-task-submit-button:focus-visible,
+.add-task-back-button:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}
+
+
+
+
+
+
+/* =====================================================
+   USER-PREFERRED DATE INPUTS
+   ===================================================== */
+
+.add-task-preferred-date {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.add-task-preferred-date .preferred-date-input {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+.add-task-date-picker-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    border-radius: 0.4rem;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.add-task-date-picker-button:hover {
+    background: rgba(128, 128, 128, 0.12);
+}
+
+.add-task-native-date {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.add-task-date-time-field > small {
+    display: block;
+    margin-top: 0.35rem;
+    opacity: 0.75;
+    font-size: 0.8rem;
+}
+
+
+
+/* GUEST TASK DRAFT NOTICE */
+
+.add-task-draft-notice {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border-color, #d1d5db);
+    border-radius: 10px;
+}
+
+.add-task-draft-notice strong {
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.add-task-draft-notice p {
+    margin: 0;
+    line-height: 1.6;
+}

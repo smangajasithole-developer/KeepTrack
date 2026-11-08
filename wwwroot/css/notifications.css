@@ -1,0 +1,416 @@
+/* =====================================================
+   KEEP TRACK — NOTIFICATIONS PAGE
+   Matches the layout structure of Tasks.css
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   Removed the max-width and auto margin so it stretches
+   to fill the main content area completely.
+   ===================================================== */
+
+.notifications-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.notifications-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.notifications-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.notifications-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.notifications-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. BUTTONS
+   ===================================================== */
+
+.notifications-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    font-family: inherit;
+    transition: all var(--kt-transition);
+}
+
+.notifications-secondary-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+.notifications-secondary-button[style*="pointer-events: none"] {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+
+/* =====================================================
+   5. NOTIFICATIONS LIST
+   ===================================================== */
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* =====================================================
+   6. NOTIFICATION CARD
+   ===================================================== */
+
+.notification-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px; /* Increased horizontal padding for wide layout */
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    transition: all var(--kt-transition);
+    overflow: hidden;
+}
+
+.notification-card.unread {
+    background: var(--kt-surface-alt);
+}
+
+.notification-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    background: transparent;
+    transition: background var(--kt-transition);
+}
+
+.notification-card.unread::before {
+    background: var(--kt-accent);
+}
+
+.notification-card:hover {
+    transform: translateY(-1px);
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+/* ---------- 6.1 Icon ---------- */
+
+.notification-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--kt-surface-tint);
+    font-size: 20px;
+    line-height: 1;
+}
+
+.notification-card.unread .notification-icon {
+    background: var(--kt-accent-soft);
+}
+
+/* ---------- 6.2 Content ---------- */
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1; /* Forces the content to expand and push the button right */
+    min-width: 0;
+}
+
+.notification-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.notification-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+    line-height: 1.35;
+}
+
+.notification-unread-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-accent);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+.notification-meta {
+    margin-top: 2px;
+    font-size: 11.5px;
+    color: var(--kt-text-soft);
+}
+
+/* ---------- 6.3 Actions ---------- */
+
+.notification-actions {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.notification-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: var(--kt-radius-pill);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.notification-action-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+.notification-action-button[style*="pointer-events: none"] {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+
+/* =====================================================
+   7. EMPTY STATE
+   ===================================================== */
+
+.notifications-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 64px 32px;
+    background: var(--kt-surface);
+    border: 1px dashed var(--kt-border-strong);
+    border-radius: var(--kt-radius-lg);
+    text-align: center;
+}
+
+.notifications-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 26px;
+    font-weight: 700;
+    box-shadow: var(--kt-shadow-md);
+}
+
+.notifications-empty-state h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.notifications-empty-state p {
+    max-width: 420px;
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   8. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .notifications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px;
+    }
+
+    .notifications-header h1 {
+        font-size: 22px;
+    }
+
+    .notifications-header > div:last-child {
+        width: 100%;
+    }
+
+    .notifications-mark-all-form {
+        width: 100%;
+    }
+
+    .notifications-secondary-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Stack the card on mobile */
+    .notification-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .notification-actions {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 12px;
+        border-top: 1px solid var(--kt-border);
+    }
+
+    .notification-read-form {
+        width: 100%;
+    }
+
+    .notification-action-button {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
+   9. FOCUS & MOTION
+   ===================================================== */
+
+.notifications-secondary-button:focus-visible,
+.notification-action-button:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

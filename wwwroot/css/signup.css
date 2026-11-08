@@ -1,0 +1,375 @@
+/* =====================================================
+   KEEP TRACK — SIGN UP PAGE
+   Composed of: centered auth card, header, form
+   sections, inputs, actions, and footer link.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER (Centers the card)
+   ===================================================== */
+
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 76px - 48px);
+    padding: 40px 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px; /* Compact like the sign-in card */
+    padding: 28px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.auth-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.auth-eyebrow {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.auth-header h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.auth-header p {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. FORM
+   ===================================================== */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.auth-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--kt-border);
+}
+
+.auth-section-heading h2 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--kt-text);
+}
+
+.auth-section-heading p {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   5. INPUT CONTROLS
+   ===================================================== */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+.form-control {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: var(--kt-radius);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 12.5px;
+    font-family: inherit;
+    line-height: 1.4;
+    outline: none;
+    transition: all var(--kt-transition);
+}
+
+.form-control::placeholder {
+    color: var(--kt-text-soft);
+}
+
+.form-control:hover {
+    border-color: #cbd2dd;
+}
+
+.form-control:focus {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 3px rgba(18, 23, 43, 0.08);
+}
+
+/* Select */
+select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   6. HELPER LABELS
+   ===================================================== */
+
+.optional-label {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--kt-surface-tint);
+    color: var(--kt-text-soft);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-help {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--kt-text-soft);
+}
+
+
+/* =====================================================
+   7. VALIDATION
+   ===================================================== */
+
+.validation-summary {
+    padding: 10px 14px;
+    margin: 0;
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-left: 3px solid var(--kt-danger);
+    border-radius: var(--kt-radius-sm);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.validation-summary ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+}
+
+.validation-summary:empty {
+    display: none;
+}
+
+.validation-message {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--kt-danger-text);
+    line-height: 1.4;
+}
+
+.validation-message:empty {
+    display: none;
+}
+
+.input-validation-error {
+    border-color: var(--kt-danger) !important;
+    background: #fff5f5 !important;
+}
+
+.input-validation-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+
+/* =====================================================
+   8. SUBMIT BUTTON
+   ===================================================== */
+
+.auth-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1px solid transparent;
+    cursor: pointer;
+    box-shadow: var(--kt-shadow-sm);
+    transition: all var(--kt-transition);
+}
+
+.auth-submit-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.auth-submit-button:disabled {
+    opacity: 0.7;
+    cursor: progress;
+    transform: none;
+    box-shadow: var(--kt-shadow-sm);
+}
+
+
+/* =====================================================
+   9. FOOTER
+   ===================================================== */
+
+.auth-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--kt-border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--kt-text-muted);
+}
+
+.auth-footer a {
+    margin-left: 4px;
+    font-weight: 600;
+    color: var(--kt-accent);
+    text-decoration: none;
+    transition: color var(--kt-transition);
+}
+
+.auth-footer a:hover {
+    color: var(--kt-primary);
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   10. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 480px) {
+    .auth-page {
+        padding: 20px 16px;
+    }
+
+    .auth-card {
+        padding: 20px;
+    }
+
+    .auth-header h1 {
+        font-size: 20px;
+    }
+}
+
+
+/* =====================================================
+   11. FOCUS & MOTION
+   ===================================================== */
+
+.auth-submit-button:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

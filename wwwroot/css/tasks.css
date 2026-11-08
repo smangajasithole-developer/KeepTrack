@@ -1,0 +1,867 @@
+/* =====================================================
+   KEEP TRACK — TASKS PAGE
+   Composed of: header, toolbar, search summary,
+   task grid, empty state, and the task details modal.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-info: #3b82f6;
+    --kt-info-soft: #e6efff;
+    --kt-info-text: #1e40af;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   ===================================================== */
+
+.tasks-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.tasks-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.tasks-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.tasks-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.tasks-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. BUTTONS
+   ===================================================== */
+
+.tasks-primary-button,
+.tasks-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+    transition: all var(--kt-transition);
+}
+
+.tasks-primary-button {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.tasks-primary-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.tasks-secondary-button {
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border-color: var(--kt-border-strong);
+}
+
+.tasks-secondary-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+
+/* =====================================================
+   5. TOOLBAR — Filters + Count
+   ===================================================== */
+
+.tasks-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.tasks-filter-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: var(--kt-surface-alt);
+    border-radius: var(--kt-radius-pill);
+}
+
+.tasks-filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--kt-transition);
+}
+
+.tasks-filter:hover {
+    color: var(--kt-text);
+}
+
+.tasks-filter.active {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.tasks-count {
+    padding: 8px 16px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   6. SEARCH SUMMARY
+   ===================================================== */
+
+.tasks-search-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px 18px;
+    background: var(--kt-accent-soft);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.tasks-search-summary p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--kt-text);
+}
+
+.tasks-search-summary a {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-accent);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.tasks-search-summary a:hover {
+    color: var(--kt-primary);
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   7. TASK LIST
+   ===================================================== */
+
+.tasks-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+}
+
+
+/* =====================================================
+   8. TASK CARD
+   ===================================================== */
+
+.task-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    overflow: hidden;
+    transition: all var(--kt-transition);
+}
+
+/* Accent stripe driven by task status */
+.task-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--kt-info);
+    transition: background var(--kt-transition);
+}
+
+.task-card:has(.task-status.completed)::before {
+    background: var(--kt-success);
+}
+
+.task-card:has(.task-status.overdue)::before {
+    background: var(--kt-danger);
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-md);
+}
+
+/* ---------- 8.1 Card header ---------- */
+
+.task-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.task-card-header > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.task-card-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+/* Status chip */
+.task-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.task-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.task-status.pending {
+    background: var(--kt-info-soft);
+    color: var(--kt-info-text);
+}
+
+.task-status.completed {
+    background: var(--kt-success-soft);
+    color: var(--kt-success-text);
+}
+
+.task-status.overdue {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+}
+
+/* ---------- 8.2 Description ---------- */
+
+.task-card-description {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+
+    /* Clamp to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---------- 8.3 Detail grid ---------- */
+
+.task-card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 14px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.task-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.task-detail-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.task-detail-value {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+/* Inline overdue badge inside the due-date cell */
+.task-overdue-text {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    margin-top: 4px;
+    padding: 3px 9px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.task-overdue-text::before {
+    content: "⚠";
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.task-overdue-text[hidden] {
+    display: none;
+}
+
+/* ---------- 8.4 Actions ---------- */
+
+.task-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 14px;
+    margin-top: auto;
+    border-top: 1px solid var(--kt-border);
+}
+
+.task-complete-form,
+.task-delete-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.task-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--kt-radius-pill);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.task-action-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-text-soft);
+    transform: translateY(-1px);
+    color: var(--kt-text);
+}
+
+/* Complete */
+.task-complete-button {
+    background: var(--kt-success);
+    color: #ffffff;
+    border-color: var(--kt-success);
+}
+
+.task-complete-button:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+
+/* View / Edit (default outline) */
+.task-action-button:not(.task-complete-button):not(.task-delete-button):hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+/* Delete */
+.task-delete-button {
+    background: var(--kt-surface);
+    color: var(--kt-danger-text);
+    border-color: var(--kt-danger-soft);
+}
+
+.task-delete-button:hover {
+    background: var(--kt-danger);
+    border-color: var(--kt-danger);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+/* Loading state (data-submitting) */
+.task-action-button[style*="pointer-events: none"] {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+
+/* =====================================================
+   9. EMPTY STATE
+   ===================================================== */
+
+.tasks-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 64px 32px;
+    background: var(--kt-surface);
+    border: 1px dashed var(--kt-border-strong);
+    border-radius: var(--kt-radius-lg);
+    text-align: center;
+}
+
+.tasks-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 26px;
+    font-weight: 700;
+    box-shadow: var(--kt-shadow-md);
+}
+
+.tasks-empty-state h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.tasks-empty-state p {
+    max-width: 420px;
+    margin: 0 0 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   10. VIEW TASK MODAL
+   ===================================================== */
+
+.task-view-modal-open {
+    overflow: hidden;
+}
+
+.task-view-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.task-view-modal.open {
+    display: flex;
+}
+
+.task-view-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 22, 38, 0.45);
+    backdrop-filter: blur(4px);
+    animation: kt-fade-in 0.18s ease;
+}
+
+.task-view-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 40px);
+    padding: 26px;
+    background: var(--kt-surface);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-lg);
+    overflow-y: auto;
+    animation: kt-pop-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes kt-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes kt-pop-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- 10.1 Modal header ---------- */
+
+.task-view-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.task-view-modal-eyebrow {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.task-view-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+.task-view-modal-close {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: 50%;
+    background: var(--kt-surface);
+    color: var(--kt-text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.task-view-modal-close:hover {
+    background: var(--kt-danger-soft);
+    border-color: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+}
+
+/* ---------- 10.2 Modal body ---------- */
+
+.task-view-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.task-view-modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.task-view-modal-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+#task-view-modal-description {
+    padding: 14px 16px;
+    margin: 0;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    color: var(--kt-text-muted);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.task-view-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.task-view-modal-grid .task-view-modal-section {
+    padding: 12px 14px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.task-view-modal-grid span:not(.task-view-modal-label) {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+/* ---------- 10.3 Modal footer ---------- */
+
+.task-view-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--kt-border);
+}
+
+
+/* =====================================================
+   11. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .tasks-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px;
+    }
+
+    .tasks-header h1 {
+        font-size: 22px;
+    }
+
+    .tasks-header .tasks-primary-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tasks-toolbar {
+        padding: 10px 12px;
+    }
+
+    .tasks-filter-group {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .tasks-filter {
+        flex: 1;
+        justify-content: center;
+        padding: 8px 12px;
+    }
+
+    .tasks-count {
+        display: none;
+    }
+
+    .tasks-list {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card-details {
+        grid-template-columns: 1fr;
+    }
+
+    .task-view-modal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card-actions {
+        gap: 6px;
+    }
+
+    .task-action-button {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+
+    .task-complete-form,
+    .task-delete-form {
+        flex: 1;
+    }
+
+    .task-complete-form .task-action-button,
+    .task-delete-form .task-action-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .tasks-empty-state {
+        padding: 48px 20px;
+    }
+
+    .task-view-modal-content {
+        padding: 20px;
+    }
+}
+
+
+/* =====================================================
+   12. FOCUS & MOTION
+   ===================================================== */
+
+.tasks-primary-button:focus-visible,
+.tasks-secondary-button:focus-visible,
+.tasks-filter:focus-visible,
+.task-action-button:focus-visible,
+.task-view-modal-close:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

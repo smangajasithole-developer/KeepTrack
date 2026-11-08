@@ -1,0 +1,1492 @@
+/* =====================================================
+   KEEP TRACK — DASHBOARD PAGE
+   Composed of: header, stat cards, status chart,
+   calendar, task lists, quick actions, and a modal.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-info: #3b82f6;
+    --kt-info-soft: #e6efff;
+    --kt-info-text: #1e40af;
+
+    --kt-chart-completed: #22c55e;
+    --kt-chart-pending: #3b82f6;
+    --kt-chart-overdue: #ef4444;
+
+    /* Calendar event tokens — used by BOTH the calendar
+       chips AND the modal popup list, so they stay in sync. */
+
+    /* Calendar event colours */
+    --kt-c-start: #2563eb;
+    --kt-c-start-soft: #dbeafe;
+
+    --kt-c-due: #d97706;
+    --kt-c-due-soft: #fef3c7;
+
+    --kt-c-completed: #16a34a;
+    --kt-c-completed-soft: #dcfce7;
+
+    --kt-c-overdue: #dc2626;
+    --kt-c-overdue-soft: #fee2e2;
+
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-xl: 28px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   ===================================================== */
+
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--kt-text);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.dashboard-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding: 18px 22px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.dashboard-page-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--kt-text);
+}
+
+.dashboard-page-header p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--kt-text-muted);
+    line-height: 1.5;
+    max-width: 520px;
+}
+
+
+/* =====================================================
+   4. BUTTONS
+   ===================================================== */
+
+.dashboard-page .primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill, 999px);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    border: 1px solid transparent;
+    box-shadow: var(--kt-shadow-sm);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.dashboard-page .primary-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.dashboard-page .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill, 999px);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border: 1px solid var(--kt-border-strong);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.dashboard-page .secondary-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary);
+}
+
+
+/* =====================================================
+   5. TOP LAYOUT
+   ===================================================== */
+
+.dashboard-top-layout {
+    display: grid;
+    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: stretch;
+}
+
+.dashboard-top-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    height: 100%;
+}
+
+
+/* =====================================================
+   6. OVERVIEW CARDS
+   ===================================================== */
+
+.dashboard-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.dashboard-card {
+    position: relative;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    padding: 16px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--kt-shadow-xs);
+    overflow: hidden;
+    transition: box-shadow var(--kt-transition), transform var(--kt-transition);
+}
+
+.dashboard-card::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--kt-accent);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--kt-shadow-md);
+}
+
+.dashboard-card-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--kt-text-muted);
+    padding-left: 18px;
+    margin-bottom: 2px;
+}
+
+.dashboard-card-value {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+}
+
+.dashboard-card-description {
+    font-size: 11.5px;
+    color: var(--kt-text-soft);
+    line-height: 1.4;
+}
+
+.dashboard-overview .dashboard-card:nth-child(1)::before { background: var(--kt-info); }
+.dashboard-overview .dashboard-card:nth-child(2)::before { background: var(--kt-success); }
+.dashboard-overview .dashboard-card:nth-child(3)::before { background: var(--kt-warning); }
+.dashboard-overview .dashboard-card:nth-child(4)::before { background: var(--kt-danger); }
+
+.dashboard-overdue-summary .dashboard-card-value {
+    color: var(--kt-danger);
+}
+
+
+/* =====================================================
+   7. SHARED PANEL
+   ===================================================== */
+
+.dashboard-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.panel-header h2 {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+    color: var(--kt-text);
+}
+
+.panel-header p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--kt-text-muted);
+    line-height: 1.5;
+}
+
+.panel-link {
+    padding: 7px 14px;
+    border-radius: var(--kt-radius-pill, 999px);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--kt-transition);
+}
+
+.panel-link:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: #fff;
+}
+
+
+/* =====================================================
+   8. TASK STATUS DOUGHNUT
+   ===================================================== */
+
+.dashboard-status-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 18px;
+}
+
+.dashboard-eyebrow {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.dashboard-status-chart {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 1 / 1;
+    margin: 8px auto;
+    flex-shrink: 0;
+}
+
+.dashboard-status-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dashboard-status-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    text-align: center;
+}
+
+.dashboard-status-center strong {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-status-center span {
+    margin-top: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.dashboard-status-legend {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.dashboard-status-legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    transition: all var(--kt-transition);
+}
+
+.dashboard-status-legend-item:hover {
+    background: var(--kt-surface);
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+    transform: translateY(-1px);
+}
+
+.dashboard-status-dot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dashboard-status-dot.total     { background: var(--kt-text); }
+.dashboard-status-dot.completed { background: var(--kt-chart-completed); }
+.dashboard-status-dot.pending   { background: var(--kt-chart-pending); }
+.dashboard-status-dot.overdue   { background: var(--kt-chart-overdue); }
+
+.dashboard-status-legend-item > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    width: 100%;
+}
+
+.dashboard-status-legend-item strong {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-status-legend-item span {
+    font-size: 11px;
+    color: var(--kt-text-muted);
+    line-height: 1.3;
+}
+
+
+/* =====================================================
+   9. TASK CALENDAR
+   ===================================================== */
+
+.dashboard-calendar-panel {
+    height: 100%;
+    align-self: stretch;
+    gap: 18px;
+}
+
+.dashboard-calendar-header {
+    align-items: center;
+}
+
+.dashboard-calendar-heading h2 {
+    font-size: 17px;
+}
+
+.calendar-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-navigation strong {
+    min-width: 130px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--kt-text);
+}
+
+.calendar-nav-button,
+.calendar-today-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--kt-radius-pill, 999px);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.calendar-nav-button {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.calendar-today-button {
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.calendar-nav-button:hover,
+.calendar-today-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: #fff;
+}
+
+.dashboard-calendar-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.calendar-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--kt-text-muted);
+}
+
+.calendar-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.calendar-legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+/* Legend dots use the SAME tokens as the calendar chips. */
+.calendar-start-dot     { background: var(--kt-c-start); }
+.calendar-due-dot       { background: var(--kt-c-due); }
+.calendar-completes-dot { background: var(--kt-c-completed); }
+.calendar-overdue-dot   { background: var(--kt-c-overdue); }
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--kt-border);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+    text-align: center;
+}
+
+.task-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calendar-day {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-height: 84px;
+    padding: 6px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-sm);
+    transition: all var(--kt-transition);
+}
+
+.calendar-day:hover {
+    background: #fff;
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.calendar-day.outside-month {
+    background: transparent;
+    border-color: transparent;
+}
+
+.calendar-day.calendar-day-today {
+    background: #fff;
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 2px rgba(18, 23, 43, 0.08);
+}
+
+.calendar-day-number {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--kt-text-muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.calendar-day-today .calendar-day-number {
+    color: var(--kt-text);
+}
+
+.calendar-day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+
+
+/* ---------- Calendar event chips ---------- */
+
+.calendar-event {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    width: 100%;
+    min-width: 0;
+    padding: 4px 6px;
+    border: 1px solid transparent;
+    border-left-width: 3px;
+    border-radius: 5px;
+
+    /* Neutral fallback; event-specific classes below set the colours. */
+    background: var(--kt-surface-alt);
+    border-left-color: var(--kt-border-strong);
+    color: var(--kt-text);
+
+    font-size: 10px;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all var(--kt-transition);
+}
+
+.calendar-event:hover {
+    filter: brightness(0.97);
+    transform: translateX(2px);
+}
+
+.calendar-event-title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Start — blue */
+.calendar-event.calendar-start-event,
+.calendar-event.calendar-event-start {
+    background: var(--kt-c-start-soft);
+    border-left-color: var(--kt-c-start);
+    color: var(--kt-c-start);
+}
+
+/* Due — amber/yellow */
+.calendar-event.calendar-due-event,
+.calendar-event.calendar-event-due {
+    background: var(--kt-c-due-soft);
+    border-left-color: var(--kt-c-due);
+    color: var(--kt-c-due);
+}
+
+/* Completed — green */
+.calendar-event.calendar-completed-event,
+.calendar-event.calendar-event-completed {
+    background: var(--kt-c-completed-soft);
+    border-left-color: var(--kt-c-completed);
+    color: var(--kt-c-completed);
+}
+
+/* Overdue — red */
+.calendar-event.calendar-overdue-event,
+.calendar-event.calendar-event-overdue {
+    background: var(--kt-c-overdue-soft);
+    border-left-color: var(--kt-c-overdue);
+    color: var(--kt-c-overdue);
+}
+
+.calendar-event-more {
+    border: none;
+    border-radius: 6px;
+    padding: 2px 4px;
+    background: transparent;
+    color: var(--kt-text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.calendar-event-more:hover {
+    background: var(--kt-accent-soft);
+    color: var(--kt-accent);
+}
+
+.calendar-empty-message {
+    padding: 12px;
+    margin: 0;
+    font-size: 13px;
+    text-align: center;
+    color: var(--kt-text-soft);
+}
+
+
+/* =====================================================
+   10. PENDING / OVERDUE TASK COLUMNS
+   ===================================================== */
+
+.dashboard-task-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dashboard-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dashboard-task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 14px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    transition: all var(--kt-transition);
+}
+
+.dashboard-task-item:hover {
+    background: #fff;
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.dashboard-task-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.dashboard-task-item-main strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kt-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dashboard-task-item-main span {
+    font-size: 12px;
+    color: var(--kt-text-muted);
+}
+
+.dashboard-task-badge {
+    padding: 5px 12px;
+    border-radius: var(--kt-radius-pill, 999px);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.dashboard-task-badge.pending {
+    background: var(--kt-info-soft);
+    color: #1e40af;
+}
+
+.dashboard-task-badge.overdue {
+    background: var(--kt-danger-soft);
+    color: #991b1b;
+}
+
+.dashboard-list-empty {
+    padding: 28px 16px;
+    background: var(--kt-surface-alt);
+    border: 1px dashed var(--kt-border-strong);
+    border-radius: var(--kt-radius);
+    text-align: center;
+}
+
+.dashboard-list-empty strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--kt-text);
+}
+
+.dashboard-list-empty p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   11. RECENT TASKS & QUICK ACTIONS
+   ===================================================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.recent-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recent-task {
+    padding: 13px 15px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    transition: all var(--kt-transition);
+}
+
+.recent-task:hover {
+    background: #fff;
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.recent-task-title strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+.recent-task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--kt-text-muted);
+}
+
+.recent-task-status {
+    padding: 4px 10px;
+    border-radius: var(--kt-radius-pill, 999px);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.recent-task-status.completed {
+    background: var(--kt-success-soft);
+    color: #065f46;
+}
+
+.recent-task-status.pending {
+    background: var(--kt-info-soft);
+    color: #1e40af;
+}
+
+.recent-task-status.overdue {
+    background: var(--kt-danger-soft);
+    color: #991b1b;
+}
+
+.recent-task-date {
+    color: var(--kt-text-soft);
+}
+
+.recent-tasks-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    padding: 8px 16px;
+    margin-top: 8px;
+    border-radius: var(--kt-radius-pill, 999px);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface);
+    color: var(--kt-text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--kt-transition);
+}
+
+.recent-tasks-more:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+.empty-state {
+    padding: 32px 16px;
+    background: var(--kt-surface-alt);
+    border: 1px dashed var(--kt-border-strong);
+    border-radius: var(--kt-radius);
+    text-align: center;
+}
+
+.empty-state-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 12px;
+    background: var(--kt-primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.empty-state h3 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: var(--kt-text);
+}
+
+.empty-state p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--kt-text-muted);
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-action {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 16px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    color: var(--kt-text);
+    text-decoration: none;
+    overflow: hidden;
+    transition: all var(--kt-transition);
+}
+
+.quick-action::after {
+    content: "→";
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    font-weight: 700;
+    color: var(--kt-text-soft);
+    transition: transform var(--kt-transition), color var(--kt-transition);
+}
+
+.quick-action:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.quick-action:hover strong,
+.quick-action:hover span,
+.quick-action:hover::after {
+    color: #fff;
+}
+
+.quick-action:hover::after {
+    transform: translateY(-50%) translateX(4px);
+}
+
+.quick-action strong {
+    position: relative;
+    z-index: 1;
+    padding-right: 24px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--kt-text);
+}
+
+.quick-action span {
+    position: relative;
+    z-index: 1;
+    padding-right: 24px;
+    font-size: 12.5px;
+    color: var(--kt-text-muted);
+    transition: color var(--kt-transition);
+}
+
+
+/* =====================================================
+   12. CALENDAR TASK DETAILS MODAL
+   ===================================================== */
+
+.calendar-modal-open,
+body.modal-open {
+    overflow: hidden;
+}
+
+.calendar-task-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.calendar-task-modal.open,
+.calendar-task-modal.is-open {
+    display: flex;
+}
+
+.calendar-task-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 22, 38, 0.45);
+    backdrop-filter: blur(4px);
+    animation: kt-fade-in 0.18s ease;
+}
+
+.calendar-task-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 480px;
+    padding: 26px;
+    background: var(--kt-surface);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-lg);
+    animation: kt-pop-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes kt-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes kt-pop-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.calendar-task-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.calendar-task-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.calendar-modal-close {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: var(--kt-radius-pill, 999px);
+    background: var(--kt-surface);
+    color: var(--kt-text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.calendar-modal-close:hover {
+    background: var(--kt-danger-soft);
+    border-color: var(--kt-danger-soft);
+    color: var(--kt-danger);
+}
+
+#calendar-modal-description {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+/* ---------- 12.1 Modal event list ---------- */
+
+.calendar-modal-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 260px;
+    padding: 4px;
+    overflow-y: auto;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.calendar-modal-event-list[hidden] {
+    display: none;
+}
+
+.calendar-modal-event {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-left: 3px solid var(--kt-c-start);
+    border-radius: var(--kt-radius-sm);
+    color: var(--kt-text);
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.calendar-modal-event:hover {
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+    transform: translateX(2px);
+}
+
+/* Base event pill */
+.calendar-modal-event-type {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border-radius: var(--kt-radius-pill, 999px);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--kt-c-start-soft);
+    color: var(--kt-c-start);
+}
+
+.calendar-modal-event-time {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--kt-text-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+.calendar-modal-event-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+/* ── Start (blue) ─────────────────────────────────── */
+
+.calendar-modal-event.calendar-start-event,
+.calendar-modal-event.calendar-modal-event-start {
+    border-left-color: var(--kt-c-start);
+    background: var(--kt-c-start-soft);
+}
+
+.calendar-modal-event.calendar-start-event .calendar-modal-event-type,
+.calendar-modal-event.calendar-modal-event-start .calendar-modal-event-type {
+    background: var(--kt-c-start-soft);
+    color: var(--kt-c-start);
+}
+
+/* ── Due (yellow) ─────────────────────────────────── */
+
+.calendar-modal-event.calendar-due-event,
+.calendar-modal-event.calendar-modal-event-due {
+    border-left-color: var(--kt-c-due);
+    background: var(--kt-c-due-soft);
+}
+
+.calendar-modal-event.calendar-due-event .calendar-modal-event-type,
+.calendar-modal-event.calendar-modal-event-due .calendar-modal-event-type {
+    background: var(--kt-c-due-soft);
+    color: var(--kt-c-due);
+}
+
+/* ── Completed (green) ────────────────────────────── */
+
+.calendar-modal-event.calendar-completed-event,
+.calendar-modal-event.calendar-modal-event-completed {
+    border-left-color: var(--kt-c-completed);
+    background: var(--kt-c-completed-soft);
+}
+
+.calendar-modal-event.calendar-completed-event .calendar-modal-event-type,
+.calendar-modal-event.calendar-modal-event-completed .calendar-modal-event-type {
+    background: var(--kt-c-completed-soft);
+    color: var(--kt-c-completed);
+}
+
+/* ── Overdue (red) ────────────────────────────────── */
+
+.calendar-modal-event.calendar-overdue-event,
+.calendar-modal-event.calendar-modal-event-overdue {
+    border-left-color: var(--kt-c-overdue);
+    background: var(--kt-c-overdue-soft);
+}
+
+.calendar-modal-event.calendar-overdue-event .calendar-modal-event-type,
+.calendar-modal-event.calendar-modal-event-overdue .calendar-modal-event-type {
+    background: var(--kt-c-overdue-soft);
+    color: var(--kt-c-overdue);
+}
+
+/* ---------- 12.2 Modal detail rows ---------- */
+
+.calendar-modal-detail {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 0;
+    border-top: 1px solid var(--kt-border);
+    font-size: 13.5px;
+}
+
+.calendar-modal-detail strong {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--kt-text-muted);
+}
+
+.calendar-modal-detail span {
+    font-weight: 500;
+    text-align: right;
+    color: var(--kt-text);
+}
+
+/* Status badge colours inside the modal (from JS classes) */
+#calendar-modal-status.calendar-status-due       { color: var(--kt-c-due); }
+#calendar-modal-status.calendar-status-completed { color: var(--kt-c-completed); }
+#calendar-modal-status.calendar-status-overdue   { color: var(--kt-c-overdue); }
+#calendar-modal-status.calendar-status-start     { color: var(--kt-c-start); }
+
+.calendar-modal-detail[hidden] {
+    display: none;
+}
+
+.calendar-task-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+
+/* =====================================================
+   13. "MORE EVENTS" POPUP
+   ===================================================== */
+
+.calendar-more-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 290px;
+    max-height: 340px;
+    padding: 12px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    box-shadow: var(--kt-shadow-lg);
+    overflow-y: auto;
+    animation: kt-pop-in 0.18s ease;
+}
+
+.calendar-more-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.calendar-more-heading {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-muted);
+}
+
+.calendar-more-close {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--kt-text-muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.calendar-more-close:hover {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger);
+}
+
+.calendar-more-popup::-webkit-scrollbar {
+    width: 6px;
+}
+
+.calendar-more-popup::-webkit-scrollbar-thumb {
+    background: var(--kt-border-strong);
+    border-radius: var(--kt-radius-pill, 999px);
+}
+
+
+/* =====================================================
+   14. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1080px) {
+    .dashboard-top-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-task-columns,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .dashboard-page-header {
+        padding: 16px 18px;
+    }
+
+    .dashboard-page-header h1 {
+        font-size: 20px;
+    }
+
+    .dashboard-overview {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .dashboard-card {
+        padding: 14px;
+    }
+
+    .dashboard-card-value {
+        font-size: 22px;
+    }
+
+    .dashboard-panel {
+        padding: 18px;
+    }
+
+    .dashboard-status-chart {
+        max-width: 170px;
+    }
+
+    .calendar-navigation {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .calendar-navigation strong {
+        min-width: auto;
+    }
+
+    .calendar-day {
+        min-height: 66px;
+    }
+
+    .calendar-event {
+        font-size: 9px;
+        padding: 2px 4px;
+    }
+
+    .calendar-event-type {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-page .primary-button {
+        width: 100%;
+    }
+
+    .calendar-weekdays {
+        font-size: 10px;
+    }
+
+    .calendar-day {
+        min-height: 56px;
+        padding: 4px;
+    }
+
+    .calendar-day-number {
+        font-size: 10px;
+    }
+}
+
+
+/* =====================================================
+   15. FOCUS & MOTION
+   ===================================================== */
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible,
+.calendar-nav-button:focus-visible,
+.calendar-today-button:focus-visible,
+.panel-link:focus-visible,
+.quick-action:focus-visible,
+.calendar-event:focus-visible,
+.calendar-modal-close:focus-visible,
+.calendar-modal-event:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+
+
+
+
+

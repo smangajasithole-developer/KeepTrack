@@ -1,0 +1,617 @@
+
+@page "/Dashboard"
+@model keeptrack.Pages.Dashboard.DashboardModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/dashboard.css"
+          asp-append-version="true" />
+}
+
+<div class="dashboard-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <header class="dashboard-page-header">
+
+        <div>
+            <h1>Dashboard</h1>
+
+            <p>
+                Welcome to your KeepTrack workspace.
+                Here's what's happening with your tasks.
+            </p>
+        </div>
+
+        <a asp-page="/Tasks/AddTask/AddTask"
+           class="primary-button">
+            + Add Task
+        </a>
+
+    </header>
+
+    <!-- Date format hint — read by dashboard.js for calendar labels. -->
+    <input type="hidden"
+           id="user-date-format"
+           value="@Model.DateFormat" />
+
+    <!-- =====================================================
+         TOP SECTION — stat cards + status chart | calendar
+         ===================================================== -->
+
+    <section class="dashboard-top-layout">
+
+        <!-- LEFT COLUMN — overview cards + status doughnut -->
+
+        <div class="dashboard-top-left">
+
+            <div class="dashboard-overview">
+
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Total Tasks</span>
+                    <strong class="dashboard-card-value">@Model.TotalTasks</strong>
+                    <span class="dashboard-card-description">
+                        Tasks in your workspace
+                    </span>
+                </article>
+
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Completed</span>
+                    <strong class="dashboard-card-value">@Model.CompletedTasks</strong>
+                    <span class="dashboard-card-description">
+                        Tasks completed
+                    </span>
+                </article>
+
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Pending</span>
+                    <strong class="dashboard-card-value">@Model.PendingTasks</strong>
+                    <span class="dashboard-card-description">
+                        Incomplete tasks not yet overdue
+                    </span>
+                </article>
+
+                <article class="dashboard-card dashboard-overdue-summary">
+                    <span class="dashboard-card-label">Overdue</span>
+                    <strong class="dashboard-card-value">@Model.OverdueTasks</strong>
+                    <span class="dashboard-card-description">
+                        Tasks past their due date and time
+                    </span>
+                </article>
+
+            </div>
+
+            <!-- Task status doughnut -->
+
+            <section class="dashboard-panel dashboard-status-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="dashboard-eyebrow">TASK BREAKDOWN</span>
+                        <h2>Task Status</h2>
+                        <p>How your tasks are distributed.</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-status-chart">
+
+                    <canvas id="dashboardStatusChart"></canvas>
+
+                    <div class="dashboard-status-center">
+                        <strong>@Model.TotalTasks</strong>
+                        <span>Total</span>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-status-legend">
+
+                    <div class="dashboard-status-legend-item total">
+                        <span class="dashboard-status-dot total"></span>
+                        <div>
+                            <strong>@Model.TotalTasks</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-status-legend-item completed">
+                        <span class="dashboard-status-dot completed"></span>
+                        <div>
+                            <strong>@Model.CompletedTasks</strong>
+                            <span>Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-status-legend-item pending">
+                        <span class="dashboard-status-dot pending"></span>
+                        <div>
+                            <strong>@Model.PendingTasks</strong>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-status-legend-item overdue">
+                        <span class="dashboard-status-dot overdue"></span>
+                        <div>
+                            <strong>@Model.OverdueTasks</strong>
+                            <span>Overdue</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN — task calendar -->
+
+        <section class="dashboard-panel dashboard-calendar-panel">
+
+            <div class="panel-header dashboard-calendar-header">
+
+                <div class="dashboard-calendar-heading">
+                    <h2>Task Calendar</h2>
+                    <p>View your scheduled starts and deadlines.</p>
+                </div>
+
+                <div class="calendar-navigation">
+
+                    <button type="button"
+                            id="calendar-previous"
+                            class="calendar-nav-button"
+                            aria-label="Previous month">
+                        &#8249;
+                    </button>
+
+                    <strong id="calendar-month-label"></strong>
+
+                    <button type="button"
+                            id="calendar-next"
+                            class="calendar-nav-button"
+                            aria-label="Next month">
+                        &#8250;
+                    </button>
+
+                    <button type="button"
+                            id="calendar-today"
+                            class="calendar-today-button">
+                        Today
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-calendar-body">
+
+                <div class="calendar-legend">
+                    <span>
+                        <i class="calendar-legend-dot calendar-start-dot"></i>
+                        Start
+                    </span>
+                    <span>
+                        <i class="calendar-legend-dot calendar-due-dot"></i>
+                        Due
+                    </span>
+                    <span>
+                        <i class="calendar-legend-dot calendar-completes-dot"></i>
+                        Completed
+                    </span>
+                    <span>
+                        <i class="calendar-legend-dot calendar-overdue-dot"></i>
+                        Overdue
+                    </span>
+                </div>
+
+                <div class="calendar-weekdays" aria-hidden="true">
+                    <span>Sun</span>
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                </div>
+
+                <div id="task-calendar"
+                     class="task-calendar"
+                     aria-label="Monthly task calendar">
+                </div>
+
+                <p id="calendar-empty-message"
+                   class="calendar-empty-message"
+                   hidden>
+                    No tasks scheduled for this month.
+                </p>
+
+            </div>
+
+        </section>
+
+    </section>
+
+    <!-- =====================================================
+         PENDING & OVERDUE TASK COLUMNS
+         ===================================================== -->
+
+    <section class="dashboard-task-columns">
+
+        <!-- Pending tasks -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Pending Tasks</h2>
+                    <p>Tasks that still need your attention.</p>
+                </div>
+
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="pending"
+                   class="panel-link">
+                    View all
+                </a>
+            </div>
+
+            @if (Model.PendingTaskList.Any())
+            {
+                var visiblePending = Model.PendingTaskList.Take(3);
+
+                <div class="dashboard-task-list">
+                    @foreach (var task in visiblePending)
+                    {
+                        <article class="dashboard-task-item">
+
+                            <div class="dashboard-task-item-main">
+                                <strong>@task.Title</strong>
+
+                                <span>
+                                    @if (task.DueDate.HasValue)
+                                    {
+                                        <text>Due @task.DueDate.Value.ToString(Model.DateFormat) at @task.DueDate.Value.ToString("HH:mm")</text>
+                                    }
+                                    else
+                                    {
+                                        <text>No due date</text>
+                                    }
+                                </span>
+                            </div>
+
+                            <span class="dashboard-task-badge pending">
+                                Pending
+                            </span>
+
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-list-empty">
+                    <strong>You're all caught up.</strong>
+                    <p>You have no pending tasks right now.</p>
+                </div>
+            }
+
+        </section>
+
+        <!-- Overdue tasks -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Overdue Tasks</h2>
+                    <p>Incomplete tasks past their deadlines.</p>
+                </div>
+
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="overdue"
+                   class="panel-link">
+                    Review tasks
+                </a>
+            </div>
+
+            @if (Model.OverdueTaskList.Any())
+            {
+                var visibleOverdue = Model.OverdueTaskList.Take(3);
+
+                <div class="dashboard-task-list">
+                    @foreach (var task in visibleOverdue)
+                    {
+                        <article class="dashboard-task-item">
+
+                            <div class="dashboard-task-item-main">
+                                <strong>@task.Title</strong>
+
+                                <span>
+                                    Due @task.DueDate!.Value.ToString(Model.DateFormat) at @task.DueDate.Value.ToString("HH:mm")
+                                </span>
+                            </div>
+
+                            <span class="dashboard-task-badge overdue">
+                                Overdue
+                            </span>
+
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-list-empty">
+                    <strong>No overdue tasks.</strong>
+                    <p>You're up to date with your deadlines.</p>
+                </div>
+            }
+
+        </section>
+
+    </section>
+
+    <!-- =====================================================
+         RECENT TASKS & QUICK ACTIONS
+         ===================================================== -->
+
+    <section class="dashboard-grid">
+
+        <!-- Recent tasks -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Recent Tasks</h2>
+                    <p>Your two most recently created tasks.</p>
+                </div>
+
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="all"
+                   class="panel-link">
+                    View all
+                </a>
+            </div>
+
+            @if (Model.RecentTasks.Any())
+            {
+                // Show the 2 newest tasks, then summarise the rest.
+                var visibleRecent = Model.RecentTasks.Take(2).ToList();
+                var remainingRecent = Model.RecentTasks.Count - visibleRecent.Count;
+
+                <div class="recent-tasks">
+
+                    @foreach (var task in visibleRecent)
+                    {
+                        var isOverdue = Model.IsOverdue(task);
+
+                        var status = task.IsCompleted
+                            ? "Completed"
+                            : isOverdue ? "Overdue" : "Pending";
+
+                        <article class="recent-task">
+
+                            <div class="recent-task-content">
+
+                                <div class="recent-task-title">
+                                    <strong>@task.Title</strong>
+                                </div>
+
+                                <div class="recent-task-meta">
+
+                                    <span class="recent-task-status @status.ToLowerInvariant()">
+                                        @status
+                                    </span>
+
+                                    <span class="recent-task-date">
+                                        Created @Model.FormatCreatedAt(task.CreatedAt)
+                                    </span>
+
+                                    @if (task.DueDate.HasValue)
+                                    {
+                                        <span class="recent-task-date">
+                                            Due @task.DueDate.Value.ToString(Model.DateFormat)
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </article>
+                    }
+
+                </div>
+
+                @if (remainingRecent > 0)
+                {
+                    <a asp-page="/Tasks/Tasks"
+                       asp-route-filter="all"
+                       class="recent-tasks-more">
+                        +@remainingRecent more
+                    </a>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">✓</div>
+
+                    <h3>No tasks yet</h3>
+
+                    <p>Create your first task to start using KeepTrack.</p>
+
+                    <a asp-page="/Tasks/AddTask/AddTask"
+                       class="secondary-button">
+                        Create your first task
+                    </a>
+
+                </div>
+            }
+
+        </section>
+
+        <!-- Quick actions -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Common actions at your fingertips.</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+
+                <a asp-page="/Tasks/AddTask/AddTask"
+                   class="quick-action">
+                    <strong>Add Task</strong>
+                    <span>Create a new task</span>
+                </a>
+
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="all"
+                   class="quick-action">
+                    <strong>Manage Tasks</strong>
+                    <span>View, edit, complete, or delete tasks</span>
+                </a>
+
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="completed"
+                   class="quick-action">
+                    <strong>Completed Tasks</strong>
+                    <span>Review tasks you've finished</span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </section>
+
+    <!-- =====================================================
+         HIDDEN DATA FEEDERS
+         Read by dashboard.js to render the doughnut chart
+         and calendar cells.
+         ===================================================== -->
+
+    <!-- Status data for the doughnut chart -->
+    <div id="dashboard-status-data"
+         hidden
+         data-completed="@Model.CompletedTasks"
+         data-pending="@Model.PendingTasks"
+         data-overdue="@Model.OverdueTasks">
+    </div>
+
+    <!-- Calendar data — one element per task -->
+    <div id="calendar-task-data" hidden>
+        @foreach (var task in Model.CalendarTasks)
+        {
+            <div data-calendar-task
+                 data-task-id="@task.Id"
+                 data-title="@task.Title"
+                 data-description="@task.Description"
+                 data-start="@(task.StartDate.HasValue ? task.StartDate.Value.ToString("yyyy-MM-ddTHH:mm:ss") : "")"
+                 data-due="@(task.DueDate.HasValue ? task.DueDate.Value.ToString("yyyy-MM-ddTHH:mm:ss") : "")"
+                 data-start-immediately="@task.StartImmediately.ToString().ToLowerInvariant()"
+                 data-completed="@task.IsCompleted.ToString().ToLowerInvariant()">
+            </div>
+        }
+    </div>
+
+    <!-- =====================================================
+         CALENDAR TASK DETAILS MODAL
+         ===================================================== -->
+
+    <div id="calendar-task-modal"
+         class="calendar-task-modal"
+         aria-hidden="true">
+
+        <div class="calendar-task-modal-overlay"
+             id="calendar-modal-overlay">
+        </div>
+
+        <div class="calendar-task-modal-content"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="calendar-modal-title">
+
+            <div class="calendar-task-modal-header">
+
+                <h2 id="calendar-modal-title">Task details</h2>
+
+                <button type="button"
+                        id="calendar-modal-close"
+                        class="calendar-modal-close"
+                        aria-label="Close task details">
+                    ×
+                </button>
+
+            </div>
+
+            <p id="calendar-modal-description"></p>
+
+            <!--
+                Displays all events for the selected date.
+                JavaScript fills this list dynamically.
+            -->
+            <div id="calendar-modal-event-list"
+                 class="calendar-modal-event-list"
+                 hidden
+                 aria-label="Tasks scheduled for this day">
+            </div>
+
+            <div class="calendar-modal-detail"
+                 id="calendar-modal-status-row">
+                <strong>Status</strong>
+                <span id="calendar-modal-status"></span>
+            </div>
+
+            <div class="calendar-modal-detail"
+                 id="calendar-modal-start-row">
+                <strong>Start</strong>
+                <span id="calendar-modal-start"></span>
+            </div>
+
+            <div class="calendar-modal-detail"
+                 id="calendar-modal-due-row">
+                <strong>Due</strong>
+                <span id="calendar-modal-due"></span>
+            </div>
+
+            <div class="calendar-task-modal-footer">
+
+                <a id="calendar-modal-edit"
+                   class="primary-button"
+                   href="#">
+                    Edit task
+                </a>
+
+                <button type="button"
+                        id="calendar-modal-close-button"
+                        class="calendar-today-button">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="~/js/dashboard.js"
+            asp-append-version="true"></script>
+}

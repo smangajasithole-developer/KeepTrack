@@ -1,0 +1,441 @@
+@page "/Tasks"
+@model TasksModel
+
+@{
+    ViewData["Title"] = "All Tasks";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/tasks.css"
+          asp-append-version="true" />
+}
+
+<div class="tasks-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="tasks-header">
+        <div>
+            <span class="tasks-eyebrow">
+                TASK MANAGEMENT
+            </span>
+
+            <h1>All Tasks</h1>
+
+            <p>
+                View, organise, and manage all of your tasks
+                from one place.
+            </p>
+        </div>
+
+        <div>
+            <a asp-page="/Tasks/AddTask/AddTask"
+               class="tasks-primary-button">
+                + Add Task
+            </a>
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         TOOLBAR — Filters + Task Count
+         ===================================================== -->
+
+    <div class="tasks-toolbar">
+
+        <div class="tasks-filter-group">
+
+            <a asp-page="/Tasks/Tasks"
+               asp-route-filter="all"
+               asp-route-searchTerm="@Model.SearchTerm"
+               class="tasks-filter @(Model.Filter == "all" ? "active" : "")">
+                All
+            </a>
+
+            <a asp-page="/Tasks/Tasks"
+               asp-route-filter="pending"
+               asp-route-searchTerm="@Model.SearchTerm"
+               class="tasks-filter @(Model.Filter == "pending" ? "active" : "")">
+                Pending
+            </a>
+
+            <a asp-page="/Tasks/Tasks"
+               asp-route-filter="overdue"
+               asp-route-searchTerm="@Model.SearchTerm"
+               class="tasks-filter @(Model.Filter == "overdue" ? "active" : "")">
+                Overdue
+            </a>
+
+            <a asp-page="/Tasks/Tasks"
+               asp-route-filter="completed"
+               asp-route-searchTerm="@Model.SearchTerm"
+               class="tasks-filter @(Model.Filter == "completed" ? "active" : "")">
+                Completed
+            </a>
+
+        </div>
+
+        <div class="tasks-count"
+             data-task-count="@Model.Tasks.Count">
+            @Model.Tasks.Count
+            @(Model.Tasks.Count == 1 ? "task" : "tasks")
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH SUMMARY
+         ===================================================== -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+    {
+        <div class="tasks-search-summary">
+
+            <p>
+                @Model.Tasks.Count
+                @(Model.Tasks.Count == 1 ? "result" : "results")
+                for <strong>@Model.SearchTerm</strong>
+            </p>
+
+            <a asp-page="/Tasks/Tasks"
+               asp-route-filter="@Model.Filter">
+                Clear search
+            </a>
+
+        </div>
+    }
+
+
+    <!-- =====================================================
+         TASK LIST
+         ===================================================== -->
+
+    @if (Model.Tasks.Any())
+    {
+        <section class="tasks-list">
+
+            @foreach (var task in Model.Tasks)
+            {
+                var startDisplay = Model.GetStartDisplay(task);
+
+                var createdDisplay = task.CreatedAt
+                    .ToLocalTime()
+                    .ToString(
+                        $"{Model.DateFormat} 'at' HH:mm",
+                        System.Globalization.CultureInfo.InvariantCulture
+                    );
+
+                var dueDisplay = task.DueDate.HasValue
+                    ? task.DueDate.Value.ToString(
+                        $"{Model.DateFormat} 'at' HH:mm",
+                        System.Globalization.CultureInfo.InvariantCulture
+                    )
+                    : "No due date";
+
+                var reminderDisplay = Model.GetReminderDisplay(task);
+
+                var isOverdue = !task.IsCompleted
+                    && task.DueDate.HasValue
+                    && task.DueDate.Value <= DateTime.Now;
+
+                var taskStatus = task.IsCompleted
+                    ? "Completed"
+                    : isOverdue ? "Overdue" : "Pending";
+
+                var taskStatusClass = taskStatus.ToLowerInvariant();
+
+                <article class="task-card"
+                         data-due-date="@(task.DueDate.HasValue ? task.DueDate.Value.ToString("yyyy-MM-ddTHH:mm:ss") : "")"
+                         data-task-completed="@task.IsCompleted.ToString().ToLowerInvariant()">
+
+                    <!-- ---------- Task Header ---------- -->
+                    <div class="task-card-header">
+                        <div>
+                            <h2 class="task-card-title">
+                                @task.Title
+                            </h2>
+
+                            <span class="task-status @taskStatusClass">
+                                @taskStatus
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ---------- Description ---------- -->
+                    @if (!string.IsNullOrWhiteSpace(task.Description))
+                    {
+                        <p class="task-card-description">
+                            @task.Description
+                        </p>
+                    }
+
+                    <!-- ---------- Task Information ---------- -->
+                    <div class="task-card-details">
+
+                        <div class="task-detail">
+                            <span class="task-detail-label">Created</span>
+                            <span class="task-detail-value">@createdDisplay</span>
+                        </div>
+
+                        <div class="task-detail">
+                            <span class="task-detail-label">Start</span>
+                            <span class="task-detail-value">@startDisplay</span>
+                        </div>
+
+                        <div class="task-detail">
+                            <span class="task-detail-label">Due date and time</span>
+                            <span class="task-detail-value">@dueDisplay</span>
+
+                            @if (!task.IsCompleted && task.DueDate.HasValue)
+                            {
+                                <span class="task-overdue-text"
+                                      data-overdue-indicator
+                                      hidden>
+                                </span>
+                            }
+                        </div>
+
+                        <div class="task-detail">
+                            <span class="task-detail-label">Reminder</span>
+                            <span class="task-detail-value">@reminderDisplay</span>
+                        </div>
+
+                    </div>
+
+                    <!-- ---------- Task Actions ---------- -->
+                    <div class="task-card-actions">
+
+                        @if (!task.IsCompleted)
+                        {
+                            <form method="post"
+                                  asp-page-handler="Complete"
+                                  class="task-complete-form">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@task.Id" />
+
+                                <button type="submit"
+                                        class="task-action-button task-complete-button"
+                                        data-submitting="Completing...">
+                                    Complete Task
+                                </button>
+
+                            </form>
+                        }
+
+                        <button type="button"
+                                class="task-action-button task-view-button"
+                                data-task-title="@task.Title"
+                                data-task-description="@task.Description"
+                                data-task-status="@taskStatus"
+                                data-task-created="@createdDisplay"
+                                data-task-due="@dueDisplay"
+                                data-task-start="@startDisplay"
+                                data-task-reminder="@reminderDisplay">
+                            View
+                        </button>
+
+                        <a asp-page="/Tasks/EditTask/EditTask"
+                           asp-route-id="@task.Id"
+                           class="task-action-button">
+                            Edit
+                        </a>
+
+                        <form method="post"
+                              asp-page-handler="Delete"
+                              class="task-delete-form">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@task.Id" />
+
+                            <button type="submit"
+                                    class="task-action-button task-delete-button"
+                                    data-submitting="Deleting..."
+                                    onclick="return confirm('Are you sure you want to delete this task?');">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+            }
+
+        </section>
+    }
+    else
+    {
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+
+        <section class="tasks-empty-state">
+
+            <div class="tasks-empty-icon">
+                @(string.IsNullOrWhiteSpace(Model.SearchTerm) ? "✓" : "⌕")
+            </div>
+
+            <h2>
+                @(string.IsNullOrWhiteSpace(Model.SearchTerm)
+                    ? "No tasks yet"
+                    : "No matching tasks")
+            </h2>
+
+            <p>
+                @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+                {
+                    <text>
+                        No tasks matched "@Model.SearchTerm".
+                        Try another title or description.
+                    </text>
+                }
+                else
+                {
+                    <text>
+                        You haven't created any tasks yet.
+                        Create your first task to start keeping track
+                        of your work.
+                    </text>
+                }
+            </p>
+
+            @if (string.IsNullOrWhiteSpace(Model.SearchTerm))
+            {
+                <a asp-page="/Tasks/AddTask/AddTask"
+                   class="tasks-secondary-button">
+                    Create your first task
+                </a>
+            }
+            else
+            {
+                <a asp-page="/Tasks/Tasks"
+                   asp-route-filter="@Model.Filter"
+                   class="tasks-secondary-button">
+                    Clear search
+                </a>
+            }
+
+        </section>
+    }
+
+
+    <!-- =====================================================
+         VIEW TASK MODAL
+         ===================================================== -->
+
+    <div id="task-view-modal"
+         class="task-view-modal"
+         aria-hidden="true">
+
+        <div class="task-view-modal-overlay"
+             id="task-view-modal-overlay">
+        </div>
+
+        <div class="task-view-modal-content"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="task-view-modal-title">
+
+            <!-- ---------- Modal Header ---------- -->
+            <div class="task-view-modal-header">
+
+                <div>
+                    <span class="task-view-modal-eyebrow">
+                        TASK DETAILS
+                    </span>
+
+                    <h2 id="task-view-modal-title">
+                        Task
+                    </h2>
+                </div>
+
+                <button type="button"
+                        class="task-view-modal-close"
+                        id="task-view-modal-close"
+                        aria-label="Close task details">
+                    ×
+                </button>
+
+            </div>
+
+            <!-- ---------- Modal Body ---------- -->
+            <div class="task-view-modal-body">
+
+                <div class="task-view-modal-section">
+                    <span class="task-view-modal-label">
+                        Description
+                    </span>
+
+                    <p id="task-view-modal-description">
+                        No description
+                    </p>
+                </div>
+
+                <div class="task-view-modal-grid">
+
+                    <div class="task-view-modal-section">
+                        <span class="task-view-modal-label">
+                            Status
+                        </span>
+                        <span id="task-view-modal-status"></span>
+                    </div>
+
+                    <div class="task-view-modal-section">
+                        <span class="task-view-modal-label">
+                            Created
+                        </span>
+                        <span id="task-view-modal-created"></span>
+                    </div>
+
+                    <div class="task-view-modal-section">
+                        <span class="task-view-modal-label">
+                            Start date and time
+                        </span>
+                        <span id="task-view-modal-start"></span>
+                    </div>
+
+                    <div class="task-view-modal-section">
+                        <span class="task-view-modal-label">
+                            Due date and time
+                        </span>
+                        <span id="task-view-modal-due"></span>
+                    </div>
+
+                    <div class="task-view-modal-section">
+                        <span class="task-view-modal-label">
+                            Reminder
+                        </span>
+                        <span id="task-view-modal-reminder"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ---------- Modal Footer ---------- -->
+            <div class="task-view-modal-footer">
+
+                <button type="button"
+                        class="task-action-button"
+                        id="task-view-modal-close-button">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/tasks.js"
+            asp-append-version="true"></script>
+}

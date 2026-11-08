@@ -1,0 +1,650 @@
+/* =====================================================
+   KEEP TRACK — HELP PAGE
+   Composed of: header, category grid, detail sections,
+   FAQs, release notes, legal information, and footer.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   Fills the available main-content width.
+   ===================================================== */
+
+.help-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    padding: 0 0 24px;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.help-header {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, var(--kt-primary) 0%, #1e2c50 100%);
+    border-radius: var(--kt-radius-lg);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.help-header::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 140, 255, 0.25), transparent 70%);
+    pointer-events: none;
+}
+
+.help-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.help-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.help-header h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.help-header p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* =====================================================
+   4. SUPPORT SECTION HEADING
+   ===================================================== */
+
+.help-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.help-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 640px;
+}
+
+.help-section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.help-section-heading h2 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.help-section-heading p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   5. SUPPORT CATEGORY GRID
+   ===================================================== */
+
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.help-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    color: var(--kt-text);
+    text-decoration: none;
+    transition: all var(--kt-transition);
+}
+
+.help-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-md);
+}
+
+.help-card-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--kt-accent-soft);
+    color: var(--kt-accent);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.help-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.help-card-content h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.help-card-content p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+.help-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--kt-accent);
+    margin-top: 4px;
+    transition: color var(--kt-transition);
+}
+
+.help-card:hover .help-card-link {
+    color: var(--kt-primary);
+}
+
+
+/* =====================================================
+   6. DETAIL SECTIONS
+   ===================================================== */
+
+.help-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    scroll-margin-top: 100px; /* Offset for sticky header */
+}
+
+.help-detail-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--kt-border);
+}
+
+.help-detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.help-detail-heading h2 {
+    margin: 4px 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.help-detail-heading p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   7. FAQ LIST
+   ===================================================== */
+
+.help-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.help-faq {
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    transition: all var(--kt-transition);
+    overflow: hidden;
+}
+
+.help-faq:hover {
+    border-color: var(--kt-border-strong);
+}
+
+.help-faq[open] {
+    border-color: var(--kt-border-strong);
+    background: #ffffff;
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.help-faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kt-text);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--kt-transition);
+}
+
+.help-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.help-faq summary::after {
+    content: "+";
+    flex-shrink: 0;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--kt-text-soft);
+    transition: transform var(--kt-transition), color var(--kt-transition);
+}
+
+.help-faq[open] summary::after {
+    content: "−";
+    color: var(--kt-accent);
+}
+
+.help-faq summary:hover {
+    color: var(--kt-accent);
+}
+
+.help-faq p {
+    padding: 0 20px 18px;
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   8. INFORMATION CARD (Privacy / Terms / Policy)
+   ===================================================== */
+
+.help-information-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.help-information-card h3 {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.help-information-card h3:first-child {
+    margin-top: 0;
+}
+
+.help-information-card p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--kt-text-muted);
+}
+
+.help-inline-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-accent);
+    text-decoration: none;
+    transition: color var(--kt-transition), gap var(--kt-transition);
+}
+
+.help-inline-link:hover {
+    color: var(--kt-primary);
+    gap: 8px;
+}
+
+.help-legal-notice {
+    margin-top: 8px !important;
+    padding: 12px 14px;
+    background: var(--kt-surface-alt);
+    border-left: 3px solid var(--kt-warning);
+    border-radius: var(--kt-radius-sm);
+    font-size: 12.5px !important;
+    font-style: italic;
+    color: var(--kt-text-muted) !important;
+}
+
+
+/* =====================================================
+   9. RELEASE NOTES
+   ===================================================== */
+
+.help-release-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 24px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.help-release-marker {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--kt-accent);
+    box-shadow: 0 0 0 4px var(--kt-accent-soft);
+}
+
+.help-release-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+.help-release-status {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.help-release-content h3 {
+    margin: 4px 0 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--kt-text);
+}
+
+.help-release-content p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--kt-text-muted);
+}
+
+.help-release-date {
+    font-size: 12px;
+    color: var(--kt-text-soft);
+    font-style: italic;
+}
+
+
+/* =====================================================
+   10. FOOTER — STILL NEED HELP
+   ===================================================== */
+
+.help-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 32px 24px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    text-align: center;
+}
+
+.help-footer h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.help-footer p {
+    margin: 0;
+    max-width: 480px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+.help-footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 11px 24px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: var(--kt-shadow-sm);
+    transition: all var(--kt-transition);
+}
+
+.help-footer-link:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+
+/* =====================================================
+   11. SCROLL REVEAL ANIMATION
+   Matches the IntersectionObserver in help.js.
+   ===================================================== */
+
+.help-reveal-ready {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.help-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+   12. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .help-header {
+        padding: 28px 22px;
+    }
+
+    .help-header h1 {
+        font-size: 26px;
+    }
+
+    .help-header p {
+        font-size: 13.5px;
+    }
+
+    .help-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .help-details {
+        padding: 20px;
+    }
+
+    .help-detail-heading h2 {
+        font-size: 18px;
+    }
+
+    .help-faq summary {
+        padding: 14px 16px;
+        font-size: 13.5px;
+    }
+
+    .help-faq p {
+        padding: 0 16px 16px;
+        font-size: 13px;
+    }
+
+    .help-release-item {
+        padding: 16px 18px;
+        gap: 14px;
+    }
+
+    .help-footer {
+        padding: 24px 18px;
+    }
+}
+
+
+/* =====================================================
+   13. FOCUS & MOTION
+   ===================================================== */
+
+.help-card:focus-visible,
+.help-faq summary:focus-visible,
+.help-inline-link:focus-visible,
+.help-footer-link:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+
+    .help-reveal-ready {
+        opacity: 1;
+        transform: none;
+    }
+}

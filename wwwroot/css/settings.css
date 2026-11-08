@@ -1,0 +1,779 @@
+/* =====================================================
+   KEEP TRACK — SETTINGS PAGE
+   Composed of: header, messages, accordion sections,
+   profile/security forms, verification modal, and
+   the danger zone.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-hover: #dc2626;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   Fills the available main-content width.
+   ===================================================== */
+
+.settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.settings-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.settings-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.settings-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.settings-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. STATUS MESSAGES
+   ===================================================== */
+
+.settings-message {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px;
+    border-radius: var(--kt-radius);
+    border: 1px solid transparent;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.settings-message strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.settings-message ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+}
+
+.settings-message-success {
+    background: var(--kt-success-soft);
+    color: var(--kt-success-text);
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+.settings-message-error {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+
+/* =====================================================
+   5. ACCORDION SECTION
+   ===================================================== */
+
+.settings-section {
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    overflow: hidden;
+    transition: all var(--kt-transition);
+}
+
+.settings-section:hover {
+    border-color: var(--kt-border-strong);
+}
+
+/* ---------- 5.1 Section toggle ---------- */
+
+.settings-section-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 20px 24px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--kt-transition);
+}
+
+.settings-section-toggle:hover {
+    background: var(--kt-surface-alt);
+}
+
+.settings-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.settings-section-heading strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--kt-text);
+    letter-spacing: -0.01em;
+}
+
+.settings-section-summary {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+.settings-section-arrow {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--kt-surface-alt);
+    color: var(--kt-text-muted);
+    font-size: 18px;
+    line-height: 1;
+    transition: transform var(--kt-transition), background var(--kt-transition), color var(--kt-transition);
+}
+
+.settings-section-toggle[aria-expanded="true"] .settings-section-arrow {
+    transform: rotate(90deg);
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+/* ---------- 5.2 Section content ---------- */
+
+.settings-section-content {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.settings-section-toggle[aria-expanded="true"] + .settings-section-content {
+    display: block;
+    padding-top: 24px;
+}
+
+/* ---------- 5.3 Content wrapper (full width) ---------- */
+
+.settings-content-inner {
+    width: 100%;
+}
+
+
+/* =====================================================
+   6. FORM CONTROLS
+   ===================================================== */
+
+.settings-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+.settings-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.settings-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+.settings-form-group input,
+.settings-form-group select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: var(--kt-radius);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 13.5px;
+    font-family: inherit;
+    line-height: 1.4;
+    outline: none;
+    transition: all var(--kt-transition);
+}
+
+.settings-form-group input:hover,
+.settings-form-group select:hover {
+    border-color: #cbd2dd;
+}
+
+.settings-form-group input:focus,
+.settings-form-group select:focus {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 3px rgba(18, 23, 43, 0.08);
+}
+
+.settings-form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+.settings-validation {
+    font-size: 12px;
+    color: var(--kt-danger-text);
+    line-height: 1.4;
+}
+
+.settings-validation:empty {
+    display: none;
+}
+
+/* ---------- 6.1 Form actions ---------- */
+
+.settings-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.settings-section-action {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--kt-border);
+}
+
+
+/* =====================================================
+   7. BUTTONS
+   ===================================================== */
+
+.settings-primary-button,
+.settings-secondary-button,
+.settings-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--kt-transition);
+}
+
+.settings-primary-button,
+.settings-save-button {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.settings-primary-button:hover,
+.settings-save-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.settings-secondary-button {
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border-color: var(--kt-border-strong);
+}
+
+.settings-secondary-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary);
+}
+
+.settings-primary-button[disabled],
+.settings-save-button[disabled],
+.settings-secondary-button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =====================================================
+   8. ACCOUNT DETAILS GRID
+   ===================================================== */
+
+.settings-account-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 14px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.settings-field-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.settings-field strong {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--kt-text);
+    word-break: break-word;
+}
+
+
+/* =====================================================
+   9. SECURITY MODAL
+   ===================================================== */
+
+body.settings-modal-open {
+    overflow: hidden;
+}
+
+.settings-security-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 22, 38, 0.5);
+    backdrop-filter: blur(4px);
+    animation: kt-fade-in 0.18s ease;
+}
+
+.settings-security-modal[hidden] {
+    display: none;
+}
+
+.settings-security-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 440px;
+    padding: 28px;
+    background: var(--kt-surface);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-lg);
+    animation: kt-pop-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes kt-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes kt-pop-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.settings-security-modal-content h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.settings-security-modal-content > p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+.settings-security-modal-content > strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--kt-text);
+    word-break: break-all;
+}
+
+.settings-security-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: 50%;
+    background: var(--kt-surface);
+    color: var(--kt-text-muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.settings-security-modal-close:hover {
+    background: var(--kt-danger-soft);
+    border-color: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+}
+
+#security-code-countdown {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--kt-text-muted);
+}
+
+#security-code-status {
+    min-height: 16px;
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--kt-text-muted);
+}
+
+.settings-security-request-count {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--kt-text-soft);
+}
+
+.settings-security-lockout {
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--kt-danger-soft);
+    border-left: 3px solid var(--kt-danger);
+    border-radius: var(--kt-radius-sm);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--kt-danger-text);
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   10. PERSONALISATION OPTIONS
+   ===================================================== */
+
+.settings-option {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    margin-bottom: 18px;
+}
+
+.settings-option-information {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.settings-option-information strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--kt-text);
+}
+
+.settings-option-information span {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   11. DANGER ZONE
+   ===================================================== */
+
+.settings-danger-section {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.settings-danger-section .settings-section-toggle:hover {
+    background: var(--kt-danger-soft);
+}
+
+.settings-danger-section .settings-section-heading strong {
+    color: var(--kt-danger-text);
+}
+
+.settings-danger-content-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: var(--kt-danger-soft);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--kt-radius);
+    width: 100%;
+}
+
+.settings-danger-information {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.settings-danger-information strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--kt-danger-text);
+}
+
+.settings-danger-information span {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #7f1d1d;
+}
+
+.settings-danger-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-danger);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+}
+
+.settings-danger-button:hover {
+    background: var(--kt-danger-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.settings-danger-button:active {
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+   12. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .settings-page {
+        padding: 20px 16px 56px;
+    }
+
+    .settings-header {
+        padding: 18px 20px;
+    }
+
+    .settings-header h1 {
+        font-size: 22px;
+    }
+
+    .settings-account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-section-toggle,
+    .settings-section-content {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .settings-form-actions,
+    .settings-section-action {
+        flex-direction: column;
+    }
+
+    .settings-primary-button,
+    .settings-secondary-button,
+    .settings-save-button {
+        width: 100%;
+    }
+
+    .settings-security-modal-content {
+        padding: 22px;
+    }
+
+    .settings-danger-content-inner {
+        padding: 16px;
+    }
+}
+
+
+/* =====================================================
+   13. FOCUS & MOTION
+   ===================================================== */
+
+.settings-section-toggle:focus-visible,
+.settings-primary-button:focus-visible,
+.settings-secondary-button:focus-visible,
+.settings-save-button:focus-visible,
+.settings-danger-button:focus-visible,
+.settings-form-group input:focus-visible,
+.settings-form-group select:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}
+/* =====================================================
+   BROWSER NOTIFICATIONS
+   ===================================================== */
+
+.browser-notification-status {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+.browser-notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.browser-notification-actions button[hidden] {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .browser-notification-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .browser-notification-actions button {
+        width: 100%;
+    }
+}
+

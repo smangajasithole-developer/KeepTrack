@@ -1,0 +1,486 @@
+
+@page "/Tasks/AddTask"
+@model keeptrack.Pages.Tasks.AddTask.AddTaskModel
+
+@{
+    ViewData["Title"] = "Add Task";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/addtask.css"
+          asp-append-version="true" />
+}
+
+<div class="add-task-page">
+
+    <div class="add-task-header">
+        <div>
+            <span class="add-task-eyebrow">TASK MANAGEMENT</span>
+
+            <h1>Add Task</h1>
+
+            <p>
+                Create a new task and keep track of what needs to be done.
+            </p>
+        </div>
+
+        <div>
+            <a asp-page="/Tasks/Tasks"
+               class="add-task-back-button">
+                Back to Tasks
+            </a>
+        </div>
+    </div>
+
+    <section class="add-task-card">
+
+        <form method="post" id="add-task-form">
+
+            <input type="hidden"
+                   id="user-date-format"
+                   value="@Model.DateFormat" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="add-task-validation"></div>
+
+            <!-- TASK DETAILS -->
+
+            <div class="add-task-form-section">
+
+                <div class="add-task-section-header">
+                    <h2>Task Details</h2>
+
+                    <p>
+                        Give your task a clear title and description.
+                    </p>
+                </div>
+
+                <div class="add-task-form-group">
+
+                    <label asp-for="Input.Title">Task Title</label>
+
+                    <input asp-for="Input.Title"
+                           class="add-task-input"
+                           placeholder="e.g. Finish my programming assignment" />
+
+                    <span asp-validation-for="Input.Title"
+                          class="add-task-validation"></span>
+
+                </div>
+
+                <div class="add-task-form-group">
+
+                    <label asp-for="Input.Description">
+                        Description (optional)
+                    </label>
+
+                    <textarea asp-for="Input.Description"
+                              class="add-task-textarea"
+                              rows="6"
+                              placeholder="Add details, steps, or notes to help you complete this task."></textarea>
+
+                    <span asp-validation-for="Input.Description"
+                          class="add-task-validation"></span>
+
+                </div>
+
+            </div>
+
+            <!-- TASK DATES -->
+
+            <div class="add-task-form-section">
+
+                <div class="add-task-section-header">
+
+                    <h2>Schedule Your Task</h2>
+
+                    <p>
+                        Choose when to start and when the task should be completed.
+                        You can start immediately or schedule it for later.
+                    </p>
+
+                </div>
+
+                <div class="add-task-form-group">
+
+                    <label>When would you like to start?</label>
+
+                    <div class="add-task-radio-group">
+
+                        <label class="add-task-radio-option">
+
+                            <input asp-for="Input.StartImmediately"
+                                   type="radio"
+                                   value="true"
+                                   id="start-right-away" />
+
+                            <span>Start right away</span>
+
+                        </label>
+
+                        <label class="add-task-radio-option">
+
+                            <input asp-for="Input.StartImmediately"
+                                   type="radio"
+                                   value="false"
+                                   id="start-scheduled" />
+
+                            <span>Schedule for later</span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <!-- SCHEDULED START -->
+
+                <div id="scheduled-start-fields"
+                     class="add-task-form-group"
+                     hidden>
+
+                    <div class="add-task-date-time-row">
+
+                        <div class="add-task-date-time-field">
+
+                            <label asp-for="Input.StartDate">
+                                Scheduled start date
+                            </label>
+
+                            <div class="add-task-preferred-date">
+
+                                <input type="text"
+                                       id="scheduled-start-date-display"
+                                       class="add-task-input preferred-date-input"
+                                       placeholder="@Model.DateFormat"
+                                       autocomplete="off"
+                                       inputmode="text"
+                                       aria-describedby="scheduled-start-date-help" />
+
+                                <button type="button"
+                                        class="add-task-date-picker-button"
+                                        data-date-picker-target="scheduled-start-date"
+                                        aria-label="Choose scheduled start date">
+
+                                    <span aria-hidden="true">&#128197;</span>
+
+                                </button>
+
+                                <input asp-for="Input.StartDate"
+                                       type="date"
+                                       class="add-task-native-date"
+                                       id="scheduled-start-date"
+                                       tabindex="-1"
+                                       aria-hidden="true" />
+
+                            </div>
+
+                            <small id="scheduled-start-date-help">
+                                Enter a date like the example shown.
+                            </small>
+
+                            <span asp-validation-for="Input.StartDate"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                        <div class="add-task-date-time-field">
+
+                            <label asp-for="Input.StartTime">
+                                Scheduled start time
+                            </label>
+
+                            <input asp-for="Input.StartTime"
+                                   type="time"
+                                   class="add-task-input"
+                                   id="scheduled-start-time" />
+
+                            <small>
+                                Choose the time your task should begin.
+                            </small>
+
+                            <span asp-validation-for="Input.StartTime"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DUE DATE AND TIME -->
+
+                <div class="add-task-form-group">
+
+                    <div class="add-task-date-time-row">
+
+                        <div class="add-task-date-time-field">
+
+                            <label asp-for="Input.DueDate">Due date</label>
+
+                            <div class="add-task-preferred-date">
+
+                                <input type="text"
+                                       id="task-due-date-display"
+                                       class="add-task-input preferred-date-input"
+                                       placeholder="@Model.DateFormat"
+                                       autocomplete="off"
+                                       inputmode="text"
+                                       aria-describedby="task-due-date-help" />
+
+                                <button type="button"
+                                        class="add-task-date-picker-button"
+                                        data-date-picker-target="task-due-date"
+                                        aria-label="Choose due date">
+
+                                    <span aria-hidden="true">&#128197;</span>
+
+                                </button>
+
+                                <input asp-for="Input.DueDate"
+                                       type="date"
+                                       class="add-task-native-date"
+                                       id="task-due-date"
+                                       tabindex="-1"
+                                       aria-hidden="true" />
+
+                            </div>
+
+                            <small id="task-due-date-help">
+                                e.g.
+                                <span id="task-due-date-example">2026/12/24</span>
+                            </small>
+
+                            <span asp-validation-for="Input.DueDate"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                        <div class="add-task-date-time-field">
+
+                            <label asp-for="Input.DueTime">Due time</label>
+
+                            <input asp-for="Input.DueTime"
+                                   type="time"
+                                   class="add-task-input"
+                                   id="task-due-time" />
+
+                            <small>
+                                Choose when the task should be finished.
+                            </small>
+
+                            <span asp-validation-for="Input.DueTime"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- REMINDERS -->
+
+            <div class="add-task-form-section">
+
+                <div class="add-task-section-header">
+
+                    <h2>Reminders</h2>
+
+                    <p>
+                        Want a reminder? Set how often you would like to be
+                        reminded while your task is in progress.
+                    </p>
+
+                </div>
+
+                <div class="add-task-form-group">
+
+                    <label class="add-task-checkbox-option">
+
+                        <input asp-for="Input.ReminderEnabled"
+                               type="checkbox"
+                               id="reminder-enabled" />
+
+                        <span>Enable reminders for this task</span>
+
+                    </label>
+
+                    <small id="reminder-requirement-message"
+                           class="add-task-reminder-note"
+                           role="status"
+                           aria-live="polite">
+
+                        Add a valid due date and due time before enabling reminders.
+
+                    </small>
+
+                </div>
+
+                <!-- REMINDER OPTIONS -->
+
+                <div class="add-task-reminder-options"
+                     id="reminder-options"
+                     hidden>
+
+                    <p id="reminder-duration-message"
+                       class="add-task-reminder-note"
+                       role="status"
+                       aria-live="polite">
+
+                        Add your task dates to see the available reminder options.
+
+                    </p>
+
+                    <div class="add-task-reminder-schedule">
+
+                        <!-- REMINDER VALUE -->
+
+                        <div class="add-task-reminder-interval"
+                             id="reminder-value-field"
+                             hidden>
+
+                            <label asp-for="Input.ReminderValue"
+                                   id="reminder-value-label">
+                                Remind me every
+                            </label>
+
+                            <input asp-for="Input.ReminderValue"
+                                   type="number"
+                                   min="1"
+                                   step="1"
+                                   class="add-task-input"
+                                   id="reminder-value"
+                                   placeholder="e.g. 2" />
+
+                            <span asp-validation-for="Input.ReminderValue"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                        <!-- REMINDER FREQUENCY -->
+
+                        <div class="add-task-reminder-unit"
+                             id="reminder-unit-field"
+                             hidden>
+
+                            <label asp-for="Input.ReminderUnit">
+                                Reminder frequency
+                            </label>
+
+                            <select asp-for="Input.ReminderUnit"
+                                    class="add-task-input"
+                                    id="reminder-unit">
+
+                                <option value="">Choose frequency</option>
+                                <option value="Hour">Hours</option>
+                                <option value="Day">Days</option>
+                                <option value="Week">Weeks</option>
+                                <option value="Month">Months</option>
+                                <option value="Year">Years</option>
+
+                            </select>
+
+                            <span asp-validation-for="Input.ReminderUnit"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                        <!-- REMINDER TIME OF DAY -->
+
+                        <div class="add-task-reminder-time"
+                             id="reminder-time-field"
+                             hidden>
+
+                            <label asp-for="Input.ReminderTime">
+                                Time of day
+                            </label>
+
+                            <input asp-for="Input.ReminderTime"
+                                   type="time"
+                                   class="add-task-input"
+                                   id="reminder-time" />
+
+                            <small>
+                                Choose the time of day for your reminder.
+                            </small>
+
+                            <span asp-validation-for="Input.ReminderTime"
+                                  class="add-task-validation"></span>
+
+                        </div>
+
+                        <!-- HOURLY REMINDER INTERVAL -->
+
+                        <div class="add-task-reminder-time"
+                             id="reminder-interval-field"
+                             hidden>
+
+                            <label asp-for="Input.ReminderInterval">
+                                Reminder interval
+                            </label>
+
+                            <input asp-for="Input.ReminderInterval"
+                                   type="text"
+                                   class="add-task-input"
+                                   id="reminder-interval"
+                                   placeholder="e.g. 00:30:00"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   maxlength="8"
+                                   pattern="[0-9]{2,}:[0-5][0-9]:[0-5][0-9]"
+                                   title="Enter hours:minutes:seconds. For example, 00:30:00 means every 30 minutes." />
+
+                            <span asp-validation-for="Input.ReminderInterval"
+                                  class="add-task-validation"></span>
+
+                            <small>
+                                Enter hours:minutes:seconds. For example,
+                                00:30:00 means every 30 minutes, and
+                                02:00:00 means every 2 hours.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <p class="add-task-reminder-note">
+                        Reminders stop when the task is completed or its due date is reached.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- FORM ACTIONS -->
+
+            <div class="add-task-actions">
+
+                <a asp-page="/Tasks/Tasks"
+                   class="add-task-cancel-button">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="add-task-submit-button">
+                    Create Task
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/addtask.js"
+            asp-append-version="true"></script>
+
+}

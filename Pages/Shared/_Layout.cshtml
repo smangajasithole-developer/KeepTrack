@@ -1,0 +1,482 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using keeptrack.Models
+@using keeptrack.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+    
+@inject PostgresKeepTrackDbContext DbContext
+
+@{
+    // =====================================================
+    // LAYOUT DATA — current user + notifications + settings
+    // =====================================================
+
+    UserSettings? layoutSettings = null;
+    List<Notification> layoutUnreadNotifications = new();
+    int layoutUnreadNotificationCount = 0;
+    ApplicationUser? layoutCurrentUser = null;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        layoutCurrentUser = await UserManager.GetUserAsync(User);
+
+        if (layoutCurrentUser != null)
+        {
+            layoutSettings = await DbContext.UserSettings
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.UserId == layoutCurrentUser.Id);
+
+            layoutUnreadNotificationCount = await DbContext.Notifications
+                .AsNoTracking()
+                .CountAsync(n =>
+                    n.UserId == layoutCurrentUser.Id &&
+                    !n.IsRead);
+
+            layoutUnreadNotifications = await DbContext.Notifications
+                .AsNoTracking()
+                .Where(n =>
+                    n.UserId == layoutCurrentUser.Id &&
+                    !n.IsRead)
+                .OrderByDescending(n => n.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+        }
+    }
+
+    // =====================================================
+    // DERIVED LAYOUT STATE
+    // =====================================================
+
+    var layoutDateFormat = layoutSettings?.DateFormat ?? "yyyy/MM/dd";
+    var layoutStartPage = layoutSettings?.StartPage ?? "Dashboard";
+    var isAuthenticated = SignInManager.IsSignedIn(User);
+
+    // Guests always default to Light, regardless of any stored preference.
+    var layoutAppearance = isAuthenticated
+        ? (layoutSettings?.Appearance == "Dark" ? "Dark" : "Light")
+        : "Light";
+
+    // Keep the bell readable: 1–9, then "9+" for 10 or more.
+    var layoutBellCount = layoutUnreadNotificationCount >= 10
+        ? "9+"
+        : layoutUnreadNotificationCount.ToString();
+
+    // Display name fallback: First + Middle + Last (whitespace-free).
+    var layoutDisplayName = layoutCurrentUser != null
+        ? string.Join(
+            " ",
+            new[]
+            {
+                layoutCurrentUser.FirstName,
+                layoutCurrentUser.MiddleName,
+                layoutCurrentUser.LastName
+            }
+            .Where(name => !string.IsNullOrWhiteSpace(name)))
+        : string.Empty;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - KeepTrack</title>
+
+    <!-- =====================================================
+         GLOBAL STYLES
+         ===================================================== -->
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/keeptrack.styles.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/layout.css"
+          asp-append-version="true" />
+
+    <!-- Page-specific styles -->
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+
+<body data-date-format="@layoutDateFormat"
+      data-start-page="@layoutStartPage"
+      data-appearance="@layoutAppearance"
+      data-is-authenticated="@isAuthenticated.ToString().ToLowerInvariant()">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header">
+
+        <!-- Brand — routes to Dashboard when signed in, Home when guest -->
+        <div class="header-left">
+            <a class="brand"
+               asp-page="@(isAuthenticated ? "/Dashboard/Dashboard" : "/Home/Home")">
+                KeepTrack
+            </a>
+        </div>
+
+
+        <!-- Search — routes to Tasks and preserves the query string -->
+        <div class="header-search">
+            <form method="get"
+                  asp-page="/Tasks/Tasks"
+                  role="search">
+
+                <input type="search"
+                       class="search-input"
+                       name="SearchTerm"
+                       value="@Context.Request.Query["SearchTerm"]"
+                       placeholder="Search tasks..."
+                       aria-label="Search tasks"
+                       autocomplete="off" />
+            </form>
+        </div>
+
+
+        <!-- Header actions (notifications, theme, auth) -->
+        <div class="header-right">
+
+            <!-- =================================================
+                 NOTIFICATIONS (signed-in only)
+                 ================================================= -->
+
+            @if (isAuthenticated)
+            {
+                <div class="notification-menu" id="notification-menu">
+
+                    <button type="button"
+                            class="header-action notification-button"
+                            id="notification-button"
+                            aria-label="@(layoutUnreadNotificationCount > 0
+                                ? $"Notifications, {layoutUnreadNotificationCount} unread"
+                                : "Notifications")"
+                            aria-expanded="false"
+                            aria-controls="notification-dropdown"
+                            title="Notifications">
+
+                        <span aria-hidden="true">🔔</span>
+
+                        @if (layoutUnreadNotificationCount > 0)
+                        {
+                            <span class="notification-count"
+                                  aria-hidden="true">
+                                @layoutBellCount
+                            </span>
+                        }
+                    </button>
+
+                    <div class="notification-dropdown"
+                         id="notification-dropdown"
+                         hidden>
+
+                        <div class="notification-dropdown-header">
+                            <div>
+                                <strong>Notifications</strong>
+
+                                <span class="notification-unread-count">
+                                    @layoutUnreadNotificationCount unread
+                                </span>
+                            </div>
+
+                            <a asp-page="/Notifications/Notifications">
+                                View all
+                            </a>
+                        </div>
+
+                        <div class="notification-dropdown-list">
+
+                            @if (layoutUnreadNotifications.Count > 0)
+                            {
+                                @foreach (var notification in layoutUnreadNotifications)
+                                {
+                                    <a class="notification-dropdown-item"
+                                       asp-page="/Notifications/Notifications">
+
+                                        <span class="notification-item-dot"
+                                              aria-hidden="true"></span>
+
+                                        <span class="notification-item-content">
+                                            <strong>@notification.Title</strong>
+
+                                            <span class="notification-item-message">
+                                                @notification.Message
+                                            </span>
+
+                                            <time datetime="@notification.CreatedAt.ToUniversalTime().ToString("O")">
+                                                @notification.CreatedAt.ToLocalTime().ToString("dd MMM, HH:mm")
+                                            </time>
+                                        </span>
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <div class="notification-empty">
+                                    <span aria-hidden="true">✓</span>
+                                    <p>You're all caught up!</p>
+                                    <span>You have no unread notifications.</span>
+                                </div>
+                            }
+
+                        </div>
+
+                        <a class="notification-dropdown-footer"
+                           asp-page="/Notifications/Notifications">
+                            Open Notifications
+                        </a>
+
+                    </div>
+
+                </div>
+            }
+
+
+            <!-- =================================================
+                 THEME TOGGLE
+                 ================================================= -->
+
+            <button type="button"
+                    class="header-action theme-toggle-button"
+                    id="theme-toggle-button"
+                    aria-label="Switch theme"
+                    aria-pressed="false"
+                    title="Switch between Light and Night">
+
+                <span class="theme-toggle-icon"
+                      id="theme-toggle-icon"
+                      aria-hidden="true">☀️</span>
+
+                <span class="theme-toggle-label"
+                      id="theme-toggle-label">Light</span>
+
+            </button>
+
+
+            <!-- =================================================
+                 SIGN IN / SIGN OUT
+                 ================================================= -->
+
+            @if (isAuthenticated)
+            {
+                <a class="sign-in-button"
+                   asp-page="/Account/SignOut/SignOut"
+                   data-submitting="Signing out…">
+                    Sign out
+                </a>
+            }
+            else
+            {
+                <a class="sign-in-button"
+                   asp-page="/Account/SignIn/SignIn">
+                    Sign in
+                </a>
+            }
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         APP CONTAINER — sidebar + main content
+         ===================================================== -->
+
+    <div class="app-container">
+
+        <!-- =================================================
+             SIDEBAR
+             ================================================= -->
+
+        <aside class="sidebar">
+
+            <nav class="sidebar-navigation">
+
+                @if (isAuthenticated)
+                {
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Dashboard/Dashboard") == true ? "active" : "")"
+                       asp-page="/Dashboard/Dashboard">
+                        Dashboard
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Tasks/Tasks") == true ? "active" : "")"
+                       asp-page="/Tasks/Tasks">
+                        All Tasks
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Notifications/Notifications") == true ? "active" : "")"
+                       asp-page="/Notifications/Notifications">
+
+                        <span class="sidebar-link-label">
+                            Notifications
+                        </span>
+
+                        @if (layoutUnreadNotificationCount > 0)
+                        {
+                            <span class="sidebar-notification-dot"
+                                  aria-label="@layoutUnreadNotificationCount unread notifications"></span>
+                        }
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Statistics/Statistics") == true ? "active" : "")"
+                       asp-page="/Statistics/Statistics">
+                        Statistics
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Settings/Settings") == true ? "active" : "")"
+                       asp-page="/Settings/Settings">
+                        Settings
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Feedback/Feedback") == true ? "active" : "")"
+                       asp-page="/Feedback/Feedback">
+                        Feedback
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Help/Help") == true ? "active" : "")"
+                       asp-page="/Help/Help">
+                        Help
+                    </a>
+                }
+                else
+                {
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Home/Home") == true ? "active" : "")"
+                       asp-page="/Home/Home">
+                        Home
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Feedback/Feedback") == true ? "active" : "")"
+                       asp-page="/Feedback/Feedback">
+                        Feedback
+                    </a>
+
+                    <a class="sidebar-link @(ViewContext.ActionDescriptor.DisplayName?.Contains("/Help/Help") == true ? "active" : "")"
+                       asp-page="/Help/Help">
+                        Help
+                    </a>
+                }
+
+            </nav>
+
+
+            <!-- =================================================
+                 USER STATUS CARD
+                 ================================================= -->
+
+            <div class="sidebar-user">
+
+                <div class="user-status-label">
+                    User Status
+                </div>
+
+                <div class="user-status">
+                    @if (isAuthenticated && !string.IsNullOrWhiteSpace(layoutDisplayName))
+                    {
+                        @layoutDisplayName
+                    }
+                    else
+                    {
+                        <span>Guest</span>
+                    }
+                </div>
+
+                @if (isAuthenticated)
+                {
+                    <a class="sign-out-link"
+                       asp-page="/Account/SignOut/SignOut">
+                        Sign out
+                    </a>
+                }
+                else
+                {
+                    <a class="sign-in-link"
+                       asp-page="/Account/SignIn/SignIn">
+                        Sign in
+                    </a>
+                }
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MAIN CONTENT
+             ================================================= -->
+
+        <main class="main-content">
+            @RenderBody()
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="app-footer">
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+                <strong>KeepTrack</strong>
+
+                <span>
+                    Keep your tasks organised and on track.
+                </span>
+            </div>
+
+            <div class="footer-links">
+
+                <a asp-page="/Home/Home">Home</a>
+                <a asp-page="/Help/Help">Help</a>
+                <a asp-page="/Privacy">Privacy</a>
+
+            </div>
+
+            <div class="footer-copyright">
+                &copy; 2026 KeepTrack
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         SCRIPTS
+         ===================================================== -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/layout.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

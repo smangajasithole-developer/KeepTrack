@@ -1,0 +1,1216 @@
+﻿@page "/"
+@model HomeModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/home.css"
+          asp-append-version="true" />
+}
+
+<div class="home-page">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="home-hero">
+
+        <!-- ---------- LEFT: Copy ---------- -->
+        <div class="home-hero-content">
+
+            <span class="home-eyebrow">PERSONAL TASK MANAGEMENT</span>
+
+            <h1>
+                Take control of your tasks.
+                <span>Make every day count.</span>
+            </h1>
+
+            <p class="home-hero-description">
+                KeepTrack is your personal workspace for creating tasks,
+                planning when work starts and ends, setting reminders,
+                monitoring progress and understanding how you spend
+                your time.
+            </p>
+
+            <div class="home-actions">
+
+                <a asp-page="/Tasks/AddTask/AddTask"
+                   class="primary-button">
+                    Add Task
+                    <span aria-hidden="true">+</span>
+                </a>
+
+                <a asp-page="/Account/SignIn/SignIn"
+                   class="secondary-button">
+                    Get Started
+                    <span aria-hidden="true">→</span>
+                </a>
+
+                <a href="#how-it-works"
+                   class="secondary-button home-scroll-link">
+                    Explore KeepTrack
+                </a>
+
+            </div>
+
+            <div class="home-hero-points">
+
+                <span>
+                    <span class="home-check">✓</span>
+                    Organise your work
+                </span>
+
+                <span>
+                    <span class="home-check">✓</span>
+                    Plan your time
+                </span>
+
+                <span>
+                    <span class="home-check">✓</span>
+                    Track your progress
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ---------- RIGHT: Dashboard Preview ---------- -->
+        <div class="home-hero-visual"
+             aria-label="Preview of the KeepTrack dashboard">
+
+            <div class="hero-orbit hero-orbit-one"></div>
+            <div class="hero-orbit hero-orbit-two"></div>
+
+
+            <!-- Floating label — top -->
+            <div class="hero-floating-label hero-label-top">
+                <span class="hero-label-icon">✓</span>
+                <span>
+                    <strong>Stay organised</strong>
+                    <small>One task at a time</small>
+                </span>
+            </div>
+
+
+            <!-- Mini dashboard -->
+            <div class="hero-dashboard">
+
+                <!-- Header -->
+                <div class="hero-dashboard-top">
+                    <div>
+                        <span class="hero-dashboard-kicker">DASHBOARD</span>
+                        <h3>Your workspace</h3>
+                    </div>
+                </div>
+
+
+                <!-- Stat cards -->
+                <div class="hero-stat-grid">
+
+                    <div class="hero-stat-card">
+                        <span class="hero-stat-dot dot-info"></span>
+                        <span class="hero-stat-label">Start</span>
+                    </div>
+
+                    <div class="hero-stat-card">
+                        <span class="hero-stat-dot dot-success"></span>
+                        <span class="hero-stat-label">Completed</span>
+                    </div>
+
+                    <div class="hero-stat-card">
+                        <span class="hero-stat-dot dot-warning"></span>
+                        <span class="hero-stat-label">Pending</span>
+                    </div>
+
+                    <div class="hero-stat-card">
+                        <span class="hero-stat-dot dot-danger"></span>
+                        <span class="hero-stat-label">Overdue</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Doughnut + Calendar -->
+                <div class="hero-panels">
+
+                    <!-- Doughnut -->
+                    <div class="hero-status-panel">
+
+                        <span class="hero-panel-eyebrow">TASK BREAKDOWN</span>
+                        <strong class="hero-panel-title">Task Status</strong>
+
+                        <div class="hero-doughnut">
+                            <svg viewBox="0 0 42 42"
+                                 role="img"
+                                 aria-label="Task status doughnut">
+
+                                <circle cx="21" cy="21" r="15.9155"
+                                        fill="transparent"
+                                        stroke="#eceef2" stroke-width="6" />
+
+                                <!-- overdue 25% -->
+                                <circle cx="21" cy="21" r="15.9155"
+                                        fill="transparent"
+                                        stroke="#ef4444" stroke-width="6"
+                                        stroke-dasharray="25 75"
+                                        stroke-dashoffset="25"
+                                        transform="rotate(-90 21 21)" />
+
+                                <!-- pending 50% -->
+                                <circle cx="21" cy="21" r="15.9155"
+                                        fill="transparent"
+                                        stroke="#64748b" stroke-width="6"
+                                        stroke-dasharray="50 50"
+                                        stroke-dashoffset="0"
+                                        transform="rotate(-90 21 21)" />
+
+                                <!-- completed 25% -->
+                                <circle cx="21" cy="21" r="15.9155"
+                                        fill="transparent"
+                                        stroke="#22c55e" stroke-width="6"
+                                        stroke-dasharray="25 75"
+                                        stroke-dashoffset="75"
+                                        transform="rotate(-90 21 21)" />
+
+                                <!-- upright text -->
+                                <text x="21" y="21"
+                                      text-anchor="middle"
+                                      dominant-baseline="middle"
+                                      font-size="6"
+                                      font-weight="800"
+                                      fill="#0f1626">4</text>
+
+                                <text x="21" y="25.5"
+                                      text-anchor="middle"
+                                      dominant-baseline="middle"
+                                      font-size="2.4"
+                                      font-weight="700"
+                                      letter-spacing="0.08em"
+                                      fill="#9ca3af">TOTAL</text>
+
+                            </svg>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Calendar -->
+                    <div class="hero-calendar-panel">
+
+                        <div class="hero-calendar-header">
+                            <strong>Task Calendar</strong>
+                            <span class="hero-calendar-nav">
+                                <i>‹</i>
+                                <em>Oct 2026</em>
+                                <i>›</i>
+                            </span>
+                        </div>
+
+                        <div class="hero-calendar-weekdays">
+                            <span>S</span><span>M</span><span>T</span>
+                            <span>W</span><span>T</span><span>F</span><span>S</span>
+                        </div>
+
+                        <div class="hero-calendar-grid">
+                            <!-- Row 1 -->
+                            <div></div><div></div><div></div><div></div>
+                            <div class="hero-cal-day"><span>1</span></div>
+                            <div class="hero-cal-day"><span>2</span></div>
+                            <div class="hero-cal-day"><span>3</span></div>
+
+                            <!-- Row 2 -->
+                            <div class="hero-cal-day"><span>4</span></div>
+                            <div class="hero-cal-day"><span>5</span></div>
+                            <div class="hero-cal-day"><span>6</span></div>
+                            <div class="hero-cal-day"><span>7</span></div>
+                            <div class="hero-cal-day"><span>8</span></div>
+                            <div class="hero-cal-day"><span>9</span></div>
+                            <div class="hero-cal-day hero-cal-day-active"><span>10</span>
+                                <i class="hero-cal-event hero-cal-start">START</i>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="hero-cal-day hero-cal-day-today"><span>11</span>
+                                <i class="hero-cal-event hero-cal-start">START</i>
+                                <i class="hero-cal-event hero-cal-due">DUE</i>
+                            </div>
+                            <div class="hero-cal-day"><span>12</span></div>
+                            <div class="hero-cal-day"><span>13</span></div>
+                            <div class="hero-cal-day"><span>14</span></div>
+                            <div class="hero-cal-day"><span>15</span>
+                                <i class="hero-cal-event hero-cal-due">DUE</i>
+                            </div>
+                            <div class="hero-cal-day"><span>16</span></div>
+                            <div class="hero-cal-day"><span>17</span></div>
+
+                            <!-- Row 4 -->
+                            <div class="hero-cal-day"><span>18</span></div>
+                            <div class="hero-cal-day"><span>19</span></div>
+                            <div class="hero-cal-day"><span>20</span>
+                                <i class="hero-cal-event hero-cal-due">DUE</i>
+                            </div>
+                            <div class="hero-cal-day"><span>21</span></div>
+                            <div class="hero-cal-day"><span>22</span></div>
+                            <div class="hero-cal-day"><span>23</span></div>
+                            <div class="hero-cal-day"><span>24</span></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Floating label — bottom -->
+            <div class="hero-floating-label hero-label-bottom">
+                <span class="hero-label-icon hero-label-purple">◷</span>
+                <span>
+                    <strong>Time matters</strong>
+                    <small>Plan your deadlines</small>
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INTRODUCTION
+         ===================================================== -->
+
+    <section class="home-intro-strip">
+
+        <div class="home-intro-item">
+            <span class="intro-icon">01</span>
+            <div>
+                <strong>Capture your tasks</strong>
+                <p>Keep important work in one place.</p>
+            </div>
+        </div>
+
+        <div class="home-intro-item">
+            <span class="intro-icon">02</span>
+            <div>
+                <strong>Plan your schedule</strong>
+                <p>Define start times and deadlines.</p>
+            </div>
+        </div>
+
+        <div class="home-intro-item">
+            <span class="intro-icon">03</span>
+            <div>
+                <strong>Understand your progress</strong>
+                <p>Use your dashboard and statistics.</p>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         HOW IT WORKS
+         ===================================================== -->
+
+    <section class="home-section" id="how-it-works">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">HOW KEEPTRACK WORKS</span>
+
+            <h2>A simple process from planning to progress.</h2>
+
+            <p>
+                KeepTrack brings your task workflow together in a few
+                straightforward steps, helping you move from remembering
+                what needs to be done to reviewing what you have achieved.
+            </p>
+        </div>
+
+        <div class="home-process-grid">
+
+            <article class="home-process-card">
+                <div class="home-process-number">01</div>
+                <div class="home-process-icon">＋</div>
+                <h3>Create a task</h3>
+                <p>
+                    Give your task a title and the details you need.
+                    Capture the work you want to remember, organise
+                    or complete.
+                </p>
+                <span class="home-process-tag">START HERE</span>
+            </article>
+
+            <article class="home-process-card">
+                <div class="home-process-number">02</div>
+                <div class="home-process-icon">◷</div>
+                <h3>Plan your time</h3>
+                <p>
+                    Choose to start immediately or schedule a future
+                    start. Set a due date and time when the task has
+                    a deadline.
+                </p>
+                <span class="home-process-tag">SET YOUR SCHEDULE</span>
+            </article>
+
+            <article class="home-process-card">
+                <div class="home-process-number">03</div>
+                <div class="home-process-icon">♧</div>
+                <h3>Manage your work</h3>
+                <p>
+                    Review your tasks, update their details and use
+                    your workspace to keep the work that needs your
+                    attention organised.
+                </p>
+                <span class="home-process-tag">STAY ORGANISED</span>
+            </article>
+
+            <article class="home-process-card">
+                <div class="home-process-number">04</div>
+                <div class="home-process-icon">↗</div>
+                <h3>Review your progress</h3>
+                <p>
+                    Use the dashboard and statistics to get a clearer
+                    picture of your tasks and the progress you have made.
+                </p>
+                <span class="home-process-tag">KEEP IMPROVING</span>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TASK PLANNING
+         ===================================================== -->
+
+    <section class="home-section home-planning-section" id="task-planning">
+
+        <div class="home-split-layout">
+
+            <div class="home-split-copy">
+
+                <span class="home-eyebrow">TASK PLANNING</span>
+
+                <h2>Every task can have a plan.</h2>
+
+                <p>
+                    Not every task needs to start at the same time.
+                    KeepTrack lets you choose a starting approach that
+                    matches the work you are organising.
+                </p>
+
+                <div class="home-detail-list">
+
+                    <div class="home-detail-item">
+                        <span class="home-detail-check">✓</span>
+                        <div>
+                            <h3>Start immediately</h3>
+                            <p>
+                                Begin working on a task without scheduling
+                                a future start time.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="home-detail-item">
+                        <span class="home-detail-check">✓</span>
+                        <div>
+                            <h3>Schedule your start</h3>
+                            <p>
+                                Set a future date and time for work that
+                                needs to begin later.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="home-detail-item">
+                        <span class="home-detail-check">✓</span>
+                        <div>
+                            <h3>Set a due date</h3>
+                            <p>
+                                Define when the task should be due so
+                                you can plan around its deadline.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="home-detail-item">
+                        <span class="home-detail-check">✓</span>
+                        <div>
+                            <h3>Edit when plans change</h3>
+                            <p>
+                                Update task information and scheduling
+                                details when your plans need to change.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="home-planning-visual">
+
+                <div class="planning-card">
+
+                    <div class="planning-card-heading">
+                        <div>
+                            <span class="planning-kicker">TASK SCHEDULE</span>
+                            <h3>Plan your time</h3>
+                        </div>
+                        <span class="planning-calendar-icon">▦</span>
+                    </div>
+
+                    <div class="planning-timeline">
+
+                        <div class="planning-timeline-line"></div>
+
+                        <div class="planning-event">
+                            <span class="planning-event-dot planning-event-start"></span>
+                            <div class="planning-event-content">
+                                <small>START</small>
+                                <strong>Start immediately or schedule ahead</strong>
+                                <p>Choose the right starting point.</p>
+                            </div>
+                        </div>
+
+                        <div class="planning-event">
+                            <span class="planning-event-dot planning-event-reminder"></span>
+                            <div class="planning-event-content">
+                                <small>REMINDER</small>
+                                <strong>Choose a suitable interval</strong>
+                                <p>Use reminder settings for your task duration.</p>
+                            </div>
+                        </div>
+
+                        <div class="planning-event">
+                            <span class="planning-event-dot planning-event-due"></span>
+                            <div class="planning-event-content">
+                                <small>DUE</small>
+                                <strong>Set your deadline</strong>
+                                <p>Keep the expected finish time clear.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="planning-card-note">
+                        <span>i</span>
+                        <p>
+                            A valid due date and time after the start
+                            are required to enable reminders.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REMINDERS
+         ===================================================== -->
+
+    <section class="home-section home-reminders-section" id="reminders">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">DURATION-BASED REMINDERS</span>
+
+            <h2>Reminders that follow your task's timeline.</h2>
+
+            <p>
+                KeepTrack uses the time between a task's start and due
+                date to determine which reminder intervals are available.
+                This helps keep reminder settings relevant to the task.
+            </p>
+        </div>
+
+        <div class="home-reminder-layout">
+
+            <div class="home-reminder-copy">
+
+                <div class="home-reminder-feature">
+                    <span class="reminder-feature-icon">◷</span>
+                    <div>
+                        <h3>Short tasks</h3>
+                        <p>
+                            Tasks lasting up to 24 hours use hour-based
+                            reminder intervals.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="home-reminder-feature">
+                    <span class="reminder-feature-icon">▦</span>
+                    <div>
+                        <h3>Longer tasks</h3>
+                        <p>
+                            Tasks lasting more than 24 hours can use
+                            hour or day intervals.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="home-reminder-feature">
+                    <span class="reminder-feature-icon">⌁</span>
+                    <div>
+                        <h3>Long-term tasks</h3>
+                        <p>
+                            Month and week intervals become available
+                            after at least one calendar month. Year
+                            intervals become available after at least
+                            one calendar year.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="home-reminder-example">
+
+                <div class="reminder-example-header">
+                    <div>
+                        <span class="planning-kicker">EXAMPLE</span>
+                        <h3>Reminder availability</h3>
+                    </div>
+                    <span class="reminder-example-symbol">◷</span>
+                </div>
+
+                <div class="reminder-example-row">
+                    <div class="reminder-example-duration">
+                        <span class="reminder-example-dot dot-short"></span>
+                        <div>
+                            <strong>8-hour task</strong>
+                            <small>Short duration</small>
+                        </div>
+                    </div>
+                    <div class="reminder-example-units">
+                        <span>Hour</span>
+                    </div>
+                </div>
+
+                <div class="reminder-example-row">
+                    <div class="reminder-example-duration">
+                        <span class="reminder-example-dot dot-medium"></span>
+                        <div>
+                            <strong>7-day task</strong>
+                            <small>More than 24 hours</small>
+                        </div>
+                    </div>
+                    <div class="reminder-example-units">
+                        <span>Hour</span>
+                        <span>Day</span>
+                    </div>
+                </div>
+
+                <div class="reminder-example-row">
+                    <div class="reminder-example-duration">
+                        <span class="reminder-example-dot dot-long"></span>
+                        <div>
+                            <strong>2-month task</strong>
+                            <small>Longer planning period</small>
+                        </div>
+                    </div>
+                    <div class="reminder-example-units">
+                        <span>Hour</span>
+                        <span>Day</span>
+                        <span>Week</span>
+                        <span>Month</span>
+                    </div>
+                </div>
+
+                <p class="reminder-example-footnote">
+                    Reminder availability is based on the actual start
+                    and due date/time. Calendar-based intervals use
+                    calendar boundaries, not just a fixed number of hours.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WORKSPACE
+         ===================================================== -->
+
+    <section class="home-section home-workspace-section" id="workspace">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">YOUR WORKSPACE</span>
+
+            <h2>See your work from more than one angle.</h2>
+
+            <p>
+                Your workspace brings together different ways to review
+                and manage your tasks, so you can focus on individual
+                tasks while still understanding the bigger picture.
+            </p>
+        </div>
+
+        <div class="home-workspace-grid">
+
+            <article class="home-workspace-card">
+                <div class="workspace-card-icon workspace-icon-blue">▤</div>
+                <h3>Dashboard</h3>
+                <p>
+                    Use your dashboard as a central place to review
+                    task information and access the areas of KeepTrack
+                    you use.
+                </p>
+                <span class="workspace-card-label">YOUR OVERVIEW</span>
+            </article>
+
+            <article class="home-workspace-card">
+                <div class="workspace-card-icon workspace-icon-purple">▦</div>
+                <h3>Calendar</h3>
+                <p>
+                    View task dates on a calendar and move between
+                    months to understand when tasks are scheduled
+                    or due.
+                </p>
+                <span class="workspace-card-label">YOUR TIMELINE</span>
+            </article>
+
+            <article class="home-workspace-card">
+                <div class="workspace-card-icon workspace-icon-green">↗</div>
+                <h3>Statistics</h3>
+                <p>
+                    Review task-related statistics to better understand
+                    your workload, completion and scheduling information.
+                </p>
+                <span class="workspace-card-label">YOUR PROGRESS</span>
+            </article>
+
+            <article class="home-workspace-card">
+                <div class="workspace-card-icon workspace-icon-orange">⚙</div>
+                <h3>Settings</h3>
+                <p>
+                    Access your account and available preferences from
+                    your workspace to manage your KeepTrack experience.
+                </p>
+                <span class="workspace-card-label">YOUR EXPERIENCE</span>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATISTICS
+         ===================================================== -->
+
+    <section class="home-section home-statistics-section" id="progress">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">PROGRESS AND STATISTICS</span>
+
+            <h2>Turn task information into a clearer picture.</h2>
+
+            <p>
+                Managing tasks is not only about writing things down.
+                It also helps to review what is happening across your
+                workload.
+            </p>
+        </div>
+
+        <div class="home-statistics-visual">
+
+            <div class="statistics-preview">
+
+                <!-- TOP: 5 METRIC CARDS -->
+                <div class="statistics-preview-cards">
+
+                    <div class="statistics-preview-card">
+                        <span class="statistics-preview-dot dot-info"></span>
+                        <span class="statistics-preview-label">Total Tasks</span>
+                        <strong class="statistics-preview-value">4</strong>
+                        <span class="statistics-preview-desc">All tasks in your account</span>
+                    </div>
+
+                    <div class="statistics-preview-card">
+                        <span class="statistics-preview-dot dot-success"></span>
+                        <span class="statistics-preview-label">Completed</span>
+                        <strong class="statistics-preview-value">1</strong>
+                        <span class="statistics-preview-desc">Tasks successfully completed</span>
+                    </div>
+
+                    <div class="statistics-preview-card">
+                        <span class="statistics-preview-dot dot-muted"></span>
+                        <span class="statistics-preview-label">Pending</span>
+                        <strong class="statistics-preview-value">2</strong>
+                        <span class="statistics-preview-desc">Tasks not completed and not overdue</span>
+                    </div>
+
+                    <div class="statistics-preview-card">
+                        <span class="statistics-preview-dot dot-danger"></span>
+                        <span class="statistics-preview-label">Overdue</span>
+                        <strong class="statistics-preview-value">1</strong>
+                        <span class="statistics-preview-desc">Uncompleted tasks past their deadlines</span>
+                    </div>
+
+                    <div class="statistics-preview-card">
+                        <span class="statistics-preview-dot dot-accent"></span>
+                        <span class="statistics-preview-label">Completion Rate</span>
+                        <strong class="statistics-preview-value">25%</strong>
+                        <span class="statistics-preview-desc">Overall task completion</span>
+                    </div>
+
+                </div>
+
+
+                <!-- MIDDLE: TASK ACTIVITY LINE CHART -->
+                <div class="statistics-preview-panel">
+
+                    <div class="statistics-preview-panel-header">
+                        <span class="statistics-preview-eyebrow">ACTIVITY</span>
+                        <strong class="statistics-preview-panel-title">Task Activity</strong>
+                        <span class="statistics-preview-panel-sub">
+                            Tasks created during the last seven days.
+                        </span>
+                    </div>
+
+                    <div class="statistics-preview-line">
+
+                        <div class="statistics-preview-axis-y">
+                            <span>3</span>
+                            <span>2</span>
+                            <span>1</span>
+                            <span>0</span>
+                        </div>
+
+                        <div class="statistics-preview-line-chart">
+
+                            <div class="statistics-preview-grid">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <svg viewBox="0 0 300 100"
+                                 preserveAspectRatio="none"
+                                 role="img"
+                                 aria-label="Task activity last 7 days">
+
+                                <path d="M 0,95
+                                         L 50,95
+                                         L 100,95
+                                         C 120,95 130,60 150,60
+                                         C 170,60 180,95 200,95
+                                         C 220,95 230,10 250,10
+                                         C 270,10 280,95 300,95"
+                                      fill="none"
+                                      stroke="#6366f1"
+                                      stroke-width="1.6"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round" />
+
+                                <path d="M 0,95
+                                         L 50,95
+                                         L 100,95
+                                         C 120,95 130,60 150,60
+                                         C 170,60 180,95 200,95
+                                         C 220,95 230,10 250,10
+                                         C 270,10 280,95 300,95
+                                         L 300,100 L 0,100 Z"
+                                      fill="rgba(99, 102, 241, 0.14)"
+                                      stroke="none" />
+
+                                <circle cx="0"   cy="95" r="2.5" fill="#6366f1" />
+                                <circle cx="50"  cy="95" r="2.5" fill="#6366f1" />
+                                <circle cx="100" cy="95" r="2.5" fill="#6366f1" />
+                                <circle cx="150" cy="60" r="2.5" fill="#6366f1" />
+                                <circle cx="200" cy="95" r="2.5" fill="#6366f1" />
+                                <circle cx="250" cy="10" r="2.5" fill="#6366f1" />
+                                <circle cx="300" cy="95" r="2.5" fill="#6366f1" />
+
+                            </svg>
+
+                            <div class="statistics-preview-axis-x">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTTOM: COMPARISON + SUMMARY -->
+                <div class="statistics-preview-bottom">
+
+                    <div class="statistics-preview-panel">
+
+                        <div class="statistics-preview-panel-header">
+                            <span class="statistics-preview-eyebrow">COMPARISON</span>
+                            <strong class="statistics-preview-panel-title">Status Comparison</strong>
+                            <span class="statistics-preview-panel-sub">
+                                Compare completed, pending, and overdue workloads.
+                            </span>
+                        </div>
+
+                        <div class="statistics-preview-bar">
+
+                            <div class="statistics-preview-axis-y">
+                                <span>2</span>
+                                <span>1</span>
+                                <span>0</span>
+                            </div>
+
+                            <div class="statistics-preview-bar-chart">
+
+                                <div class="statistics-preview-grid">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <div class="statistics-preview-bar-row">
+
+                                    <div class="statistics-preview-bar-col">
+                                        <div class="statistics-preview-bar-fill bar-completed"
+                                             style="height: 50%;"></div>
+                                        <span>Completed</span>
+                                    </div>
+
+                                    <div class="statistics-preview-bar-col">
+                                        <div class="statistics-preview-bar-fill bar-pending"
+                                             style="height: 100%;"></div>
+                                        <span>Pending</span>
+                                    </div>
+
+                                    <div class="statistics-preview-bar-col">
+                                        <div class="statistics-preview-bar-fill bar-overdue"
+                                             style="height: 50%;"></div>
+                                        <span>Overdue</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="statistics-preview-panel">
+
+                        <div class="statistics-preview-panel-header">
+                            <span class="statistics-preview-eyebrow">SUMMARY</span>
+                            <strong class="statistics-preview-panel-title">Productivity Summary</strong>
+                            <span class="statistics-preview-panel-sub">
+                                A quick overview of your current progress.
+                            </span>
+                        </div>
+
+                        <div class="statistics-preview-summary">
+
+                            <div class="statistics-preview-summary-row">
+                                <div>
+                                    <strong>Completed Tasks</strong>
+                                    <span>Tasks you have finished.</span>
+                                </div>
+                                <strong>1</strong>
+                            </div>
+
+                            <div class="statistics-preview-summary-row">
+                                <div>
+                                    <strong>Pending Tasks</strong>
+                                    <span>Tasks not yet overdue.</span>
+                                </div>
+                                <strong>2</strong>
+                            </div>
+
+                            <div class="statistics-preview-summary-row">
+                                <div>
+                                    <strong>Overdue Tasks</strong>
+                                    <span>Tasks requiring overdue attention.</span>
+                                </div>
+                                <strong>1</strong>
+                            </div>
+
+                            <div class="statistics-preview-summary-row">
+                                <div>
+                                    <strong>Completion Rate</strong>
+                                    <span>Percentage of all tasks completed.</span>
+                                </div>
+                                <strong>25%</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DAILY USE CASES
+         ===================================================== -->
+
+    <section class="home-section home-usecases-section" id="who-its-for">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">MADE FOR EVERYDAY PLANNING</span>
+
+            <h2>One system for different kinds of work.</h2>
+
+            <p>
+                Whether you are managing personal responsibilities
+                or keeping track of ongoing work, the same task
+                planning principles can help you stay organised.
+            </p>
+        </div>
+
+        <div class="home-usecases-grid">
+
+            <article class="home-usecase-card">
+                <span class="usecase-number">01</span>
+                <h3>Personal responsibilities</h3>
+                <p>
+                    Keep important activities, errands and things you
+                    need to remember together in one workspace.
+                </p>
+            </article>
+
+            <article class="home-usecase-card">
+                <span class="usecase-number">02</span>
+                <h3>Study and learning</h3>
+                <p>
+                    Plan study sessions, schedule work and keep an eye
+                    on deadlines for your learning activities.
+                </p>
+            </article>
+
+            <article class="home-usecase-card">
+                <span class="usecase-number">03</span>
+                <h3>Projects and goals</h3>
+                <p>
+                    Break your workload into individual tasks, set
+                    timelines and review your progress as you go.
+                </p>
+            </article>
+
+            <article class="home-usecase-card">
+                <span class="usecase-number">04</span>
+                <h3>Time-sensitive work</h3>
+                <p>
+                    Give tasks clear start and due times, then use
+                    suitable reminder intervals when reminders are
+                    enabled.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WORKFLOW SUMMARY
+         ===================================================== -->
+
+    <section class="home-workflow-section">
+
+        <div class="home-workflow-content">
+
+            <span class="home-eyebrow">YOUR WORKFLOW</span>
+
+            <h2>From an idea to a completed task.</h2>
+
+            <p>
+                Keep the process simple. Capture what needs to be done,
+                decide when it should happen, manage the task as plans
+                change, and review your progress.
+            </p>
+
+            <div class="home-workflow-steps">
+
+                <div class="home-workflow-step">
+                    <span>1</span>
+                    <strong>Create</strong>
+                </div>
+
+                <div class="workflow-connector"></div>
+
+                <div class="home-workflow-step">
+                    <span>2</span>
+                    <strong>Schedule</strong>
+                </div>
+
+                <div class="workflow-connector"></div>
+
+                <div class="home-workflow-step">
+                    <span>3</span>
+                    <strong>Manage</strong>
+                </div>
+
+                <div class="workflow-connector"></div>
+
+                <div class="home-workflow-step">
+                    <span>4</span>
+                    <strong>Review</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FAQ
+         ===================================================== -->
+
+    <section class="home-section home-faq-section" id="faq">
+
+        <div class="home-section-heading">
+            <span class="home-eyebrow">FREQUENTLY ASKED QUESTIONS</span>
+
+            <h2>Get to know KeepTrack.</h2>
+
+            <p>
+                A few quick answers about how the task management
+                workflow operates.
+            </p>
+        </div>
+
+        <div class="home-faq-list">
+
+            <details class="home-faq-item">
+                <summary>What can I use KeepTrack for?</summary>
+                <p>
+                    You can use KeepTrack to organise tasks, plan start
+                    and due dates, configure available reminders, review
+                    your tasks on the dashboard and calendar, and examine
+                    task-related statistics.
+                </p>
+            </details>
+
+            <details class="home-faq-item">
+                <summary>Do all tasks need a scheduled start time?</summary>
+                <p>
+                    No. You can choose to start a task immediately or
+                    schedule it to begin at a future date and time.
+                </p>
+            </details>
+
+            <details class="home-faq-item">
+                <summary>Can I enable reminders without a due date?</summary>
+                <p>
+                    No. A valid due date and time after the task start
+                    are required before reminders can be enabled.
+                </p>
+            </details>
+
+            <details class="home-faq-item">
+                <summary>Why do reminder units change with task duration?</summary>
+                <p>
+                    KeepTrack limits the available reminder units
+                    according to the task's start and due date/time.
+                    Shorter tasks use hour intervals, while longer
+                    tasks may support day, week, month or year intervals
+                    as the duration increases.
+                </p>
+            </details>
+
+            <details class="home-faq-item">
+                <summary>Can I change a task after creating it?</summary>
+                <p>
+                    Yes. Use Edit Task to update the task's details
+                    and scheduling information when your plans change.
+                </p>
+            </details>
+
+            <details class="home-faq-item">
+                <summary>Does the dashboard preview show my actual tasks?</summary>
+                <p>
+                    No. The examples on this home page are illustrative.
+                    Your actual task information is available in your
+                    KeepTrack workspace after you sign in.
+                </p>
+            </details>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FINAL CTA
+         ===================================================== -->
+
+    <section class="home-final-section">
+
+        <div class="home-final-decoration home-final-decoration-one"></div>
+        <div class="home-final-decoration home-final-decoration-two"></div>
+
+        <div class="home-final-content">
+
+            <span class="home-eyebrow">YOUR NEXT STEP STARTS HERE</span>
+
+            <h2>Your tasks. Your time. Your progress.</h2>
+
+            <p>
+                Start building a more organised workflow with a place
+                to plan tasks, manage deadlines and keep track of your
+                progress.
+            </p>
+
+            <div class="home-actions home-final-actions">
+
+                <a asp-page="/Account/SignIn/SignIn"
+                   class="primary-button">
+                    Get Started
+                    <span aria-hidden="true">→</span>
+                </a>
+
+                <a href="#how-it-works"
+                   class="secondary-button home-scroll-link">
+                    Explore the features
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/home.js"
+            asp-append-version="true"></script>
+}

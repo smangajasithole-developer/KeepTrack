@@ -1,0 +1,721 @@
+/* =====================================================
+   KEEP TRACK — EDIT TASK PAGE
+   Composed of: header, form card, input controls,
+   radio/checkbox options, reminder blocks, and actions.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-info: #3b82f6;
+    --kt-info-soft: #e6efff;
+    --kt-info-text: #1e40af;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   Fills the available width but caps the content
+   so the form is comfortable to read.
+   ===================================================== */
+
+.edit-task-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.edit-task-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.edit-task-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.edit-task-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.edit-task-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. BACK BUTTON
+   ===================================================== */
+
+.edit-task-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border: 1px solid var(--kt-border-strong);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-back-button::before {
+    content: "←";
+    font-weight: 700;
+    transition: transform var(--kt-transition);
+}
+
+.edit-task-back-button:hover {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+}
+
+.edit-task-back-button:hover::before {
+    transform: translateX(-3px);
+}
+
+
+/* =====================================================
+   5. FORM CARD
+   ===================================================== */
+
+.edit-task-card {
+    padding: 28px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.edit-task-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* =====================================================
+   6. FORM SECTIONS
+   ===================================================== */
+
+.edit-task-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 0;
+    border-top: 1px solid var(--kt-border);
+}
+
+.edit-task-form-section:first-of-type {
+    padding-top: 0;
+    border-top: none;
+}
+
+.edit-task-form-section:last-of-type {
+    padding-bottom: 4px;
+}
+
+.edit-task-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.edit-task-section-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.edit-task-section-header p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   7. FORM GROUPS & INPUTS
+   ===================================================== */
+
+.edit-task-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.edit-task-form-group > label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+    letter-spacing: 0.01em;
+}
+
+.edit-task-input,
+.edit-task-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--kt-radius);
+    border: 1px solid var(--kt-border-strong);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.5;
+    outline: none;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.edit-task-input::placeholder,
+.edit-task-textarea::placeholder {
+    color: var(--kt-text-soft);
+}
+
+.edit-task-input:hover,
+.edit-task-textarea:hover {
+    border-color: #cbd2dd;
+}
+
+.edit-task-input:focus,
+.edit-task-textarea:focus {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 3px rgba(18, 23, 43, 0.08);
+}
+
+/* Select dropdowns */
+select.edit-task-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* Date & time inputs */
+.edit-task-input[type="date"],
+.edit-task-input[type="time"] {
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.edit-task-input[type="date"]::-webkit-calendar-picker-indicator,
+.edit-task-input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity var(--kt-transition);
+}
+
+.edit-task-input[type="date"]:hover::-webkit-calendar-picker-indicator,
+.edit-task-input[type="time"]:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+
+/* =====================================================
+   8. DATE / TIME ROW
+   ===================================================== */
+
+.edit-task-date-time-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.edit-task-date-time-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.edit-task-date-time-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+
+/* =====================================================
+   9. RADIO GROUP (Start date)
+   ===================================================== */
+
+.edit-task-radio-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-pill);
+    width: fit-content;
+}
+
+.edit-task-radio-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text-muted);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.edit-task-radio-option:hover {
+    color: var(--kt-text);
+}
+
+.edit-task-radio-option:has(input[type="radio"]:checked) {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.edit-task-radio-option input[type="radio"]:checked + span {
+    color: var(--kt-primary-contrast);
+}
+
+.edit-task-radio-option:has(input[type="radio"]:focus-visible) {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+
+/* =====================================================
+   10. CHECKBOX (Reminder + Completed)
+   ===================================================== */
+
+.edit-task-checkbox-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: var(--kt-radius);
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--kt-text);
+    cursor: pointer;
+    user-select: none;
+    width: fit-content;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-checkbox-option:hover {
+    background: var(--kt-surface-tint);
+    border-color: var(--kt-border-strong);
+}
+
+.edit-task-checkbox-option input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--kt-border-strong);
+    border-radius: 6px;
+    background: var(--kt-surface);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    margin: 0;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-checkbox-option input[type="checkbox"]:hover {
+    border-color: var(--kt-text-soft);
+}
+
+.edit-task-checkbox-option input[type="checkbox"]:checked {
+    background: var(--kt-primary);
+    border-color: var(--kt-primary);
+}
+
+.edit-task-checkbox-option input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 11px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.edit-task-checkbox-option input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+
+/* =====================================================
+   11. REMINDER OPTIONS BLOCK
+   ===================================================== */
+
+.edit-task-reminder-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    margin-top: 4px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+}
+
+.edit-task-reminder-options[hidden] {
+    display: none;
+}
+
+/* Helper text inside reminder section */
+.edit-task-form-group p {
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--kt-info-soft);
+    border-left: 3px solid var(--kt-info);
+    border-radius: var(--kt-radius-sm);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--kt-info-text);
+}
+
+/* Duration error message (spans full width) */
+#edit-reminder-duration-message {
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--kt-danger-soft);
+    border-left: 3px solid var(--kt-danger);
+    border-radius: var(--kt-radius-sm);
+    color: var(--kt-danger-text);
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+#edit-reminder-duration-message[hidden] {
+    display: none;
+}
+
+
+/* =====================================================
+   12. VALIDATION
+   ===================================================== */
+
+.edit-task-validation {
+    display: block;
+    margin-top: 2px;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--kt-danger-text);
+}
+
+.edit-task-validation:empty {
+    display: none;
+}
+
+/* Summary box (ModelOnly) */
+.edit-task-validation[role="alert"],
+.edit-task-validation.validation-summary-errors,
+.edit-task-validation.validation-summary-valid {
+    display: block;
+    padding: 14px 18px;
+    border-radius: var(--kt-radius);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.edit-task-validation.validation-summary-errors {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-left: 3px solid var(--kt-danger);
+}
+
+.edit-task-validation.validation-summary-errors ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+}
+
+.edit-task-validation.validation-summary-valid {
+    display: none;
+}
+
+/* Invalid input state */
+.edit-task-input.input-validation-error,
+.edit-task-textarea.input-validation-error {
+    border-color: var(--kt-danger);
+    background: #fff5f5;
+}
+
+.edit-task-input.input-validation-error:focus,
+.edit-task-textarea.input-validation-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+
+/* =====================================================
+   13. FORM ACTIONS
+   ===================================================== */
+
+.edit-task-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 22px;
+    margin-top: 4px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.edit-task-cancel-button,
+.edit-task-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 26px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-cancel-button {
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border-color: var(--kt-border-strong);
+}
+
+.edit-task-cancel-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-text-soft);
+}
+
+.edit-task-submit-button {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.edit-task-submit-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.edit-task-submit-button:active {
+    transform: translateY(0);
+}
+
+.edit-task-submit-button:disabled {
+    opacity: 0.7;
+    cursor: progress;
+    transform: none;
+}
+
+
+/* =====================================================
+   14. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .edit-task-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px;
+    }
+
+    .edit-task-header h1 {
+        font-size: 22px;
+    }
+
+    .edit-task-back-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .edit-task-card {
+        padding: 20px;
+    }
+
+    .edit-task-form-section {
+        padding: 20px 0;
+    }
+
+    .edit-task-date-time-row {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-task-radio-group {
+        width: 100%;
+    }
+
+    .edit-task-radio-option {
+        flex: 1;
+    }
+
+    .edit-task-checkbox-option {
+        width: 100%;
+    }
+
+    .edit-task-actions {
+        flex-direction: column-reverse;
+    }
+
+    .edit-task-cancel-button,
+    .edit-task-submit-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-task-card {
+        padding: 16px;
+    }
+
+    .edit-task-header {
+        padding: 16px;
+    }
+
+    .edit-task-header h1 {
+        font-size: 20px;
+    }
+}
+
+
+/* =====================================================
+   15. FOCUS & MOTION
+   ===================================================== */
+
+.edit-task-input:focus-visible,
+.edit-task-textarea:focus-visible {
+    outline: none;
+}
+
+.edit-task-cancel-button:focus-visible,
+.edit-task-submit-button:focus-visible,
+.edit-task-back-button:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

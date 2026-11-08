@@ -1,0 +1,391 @@
+@page "/Help"
+@model keeptrack.Pages.Help.HelpModel
+
+@{
+    ViewData["Title"] = "Help";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/help.css"
+          asp-append-version="true" />
+}
+
+<div class="help-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <header class="help-header">
+        <div class="help-header-content">
+            <span class="help-eyebrow">KEEPTRACK SUPPORT</span>
+
+            <h1>How can we help?</h1>
+
+            <p>
+                Find answers, learn about KeepTrack, explore updates,
+                and understand our policies.
+            </p>
+        </div>
+    </header>
+
+
+    <!-- =====================================================
+         SUPPORT CATEGORIES GRID
+         ===================================================== -->
+
+    <section class="help-section">
+        <div class="help-section-heading">
+            <span class="help-section-eyebrow">SUPPORT & INFORMATION</span>
+            <h2>Explore KeepTrack</h2>
+            <p>
+                Choose a section below to find the information you need.
+            </p>
+        </div>
+
+        <div class="help-grid">
+
+            <!-- ---------- Help Center ---------- -->
+            <a class="help-card help-scroll-link" href="#help-center" data-target="help-center">
+                <div class="help-card-icon">
+                    <span aria-hidden="true">?</span>
+                </div>
+
+                <div class="help-card-content">
+                    <h3>Help Center</h3>
+                    <p>
+                        Learn how to use KeepTrack, manage tasks,
+                        configure reminders, and solve common problems.
+                    </p>
+                </div>
+
+                <span class="help-card-link">
+                    Explore help <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+            <!-- ---------- Privacy Center ---------- -->
+            <a class="help-card help-scroll-link" href="#privacy-center" data-target="privacy-center">
+                <div class="help-card-icon">
+                    <span aria-hidden="true">◎</span>
+                </div>
+
+                <div class="help-card-content">
+                    <h3>Privacy Center</h3>
+                    <p>
+                        Learn about your privacy choices, personal
+                        information, and account controls.
+                    </p>
+                </div>
+
+                <span class="help-card-link">
+                    Explore privacy <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+            <!-- ---------- Release Notes ---------- -->
+            <a class="help-card help-scroll-link" href="#release-notes" data-target="release-notes">
+                <div class="help-card-icon">
+                    <span aria-hidden="true">↻</span>
+                </div>
+
+                <div class="help-card-content">
+                    <h3>Release notes</h3>
+                    <p>
+                        Discover new features, improvements, and
+                        fixes introduced in KeepTrack.
+                    </p>
+                </div>
+
+                <span class="help-card-link">
+                    View updates <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+            <!-- ---------- Terms of Service ---------- -->
+            <a class="help-card help-scroll-link" href="#terms-of-service" data-target="terms-of-service">
+                <div class="help-card-icon">
+                    <span aria-hidden="true">§</span>
+                </div>
+
+                <div class="help-card-content">
+                    <h3>Terms of service</h3>
+                    <p>
+                        Read the terms and conditions governing
+                        the use of KeepTrack.
+                    </p>
+                </div>
+
+                <span class="help-card-link">
+                    Read terms <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+            <!-- ---------- Privacy Policy ---------- -->
+            <a class="help-card help-scroll-link" href="#privacy-policy" data-target="privacy-policy">
+                <div class="help-card-icon">
+                    <span aria-hidden="true">⌑</span>
+                </div>
+
+                <div class="help-card-content">
+                    <h3>Privacy Policy</h3>
+                    <p>
+                        Understand how personal information is
+                        collected, used, stored, and protected.
+                    </p>
+                </div>
+
+                <span class="help-card-link">
+                    Read policy <span aria-hidden="true">→</span>
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         01 / SUPPORT — HELP CENTER
+         ===================================================== -->
+
+    <section class="help-details" id="help-center">
+        <div class="help-detail-heading">
+            <span class="help-detail-label">01 / SUPPORT</span>
+            <h2>Help Center</h2>
+            <p>
+                Quick guidance for getting started with KeepTrack.
+            </p>
+        </div>
+
+        <div class="help-faq-list">
+
+            <details class="help-faq">
+                <summary>How do I create a task?</summary>
+                <p>
+                    Open the task creation page, enter a title and
+                    any relevant details, and configure the task's
+                    start date, due date, and reminder options before
+                    saving it.
+                </p>
+            </details>
+
+            <details class="help-faq">
+                <summary>How do task reminders work?</summary>
+                <p>
+                    You can configure reminders when creating a task.
+                    Follow the available reminder settings and ensure
+                    the task has a due date if reminders require one.
+                </p>
+            </details>
+
+            <details class="help-faq">
+                <summary>Can I change how dates are displayed?</summary>
+                <p>
+                    Open Settings and use the Date Format option
+                    to choose your preferred date display format.
+                </p>
+            </details>
+
+            <details class="help-faq">
+                <summary>How do I change my password?</summary>
+                <p>
+                    Open Settings and use the account's password
+                    management option, following the instructions
+                    provided on the page.
+                </p>
+            </details>
+
+            <details class="help-faq">
+                <summary>How do I report a problem or suggest an improvement?</summary>
+                <p>
+                    Open the Feedback page, select the appropriate
+                    category, describe the issue or suggestion,
+                    and submit your feedback.
+                </p>
+            </details>
+
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         02 / YOUR DATA — PRIVACY CENTER
+         ===================================================== -->
+
+    <section class="help-details" id="privacy-center">
+        <div class="help-detail-heading">
+            <span class="help-detail-label">02 / YOUR DATA</span>
+            <h2>Privacy Center</h2>
+            <p>
+                Information to help you understand and manage your
+                privacy while using KeepTrack.
+            </p>
+        </div>
+
+        <div class="help-information-card">
+            <h3>Your account and information</h3>
+            <p>
+                KeepTrack provides account settings and account
+                management options. Review the available controls
+                to manage your account.
+            </p>
+
+            <h3>Managing your account</h3>
+            <p>
+                You can review your account settings and use the
+                account deletion option if you decide to stop using
+                KeepTrack. Read the confirmation details carefully
+                before proceeding.
+            </p>
+
+            <a class="help-inline-link help-scroll-link" href="#privacy-policy" data-target="privacy-policy">
+                Read the Privacy Policy →
+            </a>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         03 / WHAT'S NEW — RELEASE NOTES
+         ===================================================== -->
+
+    <section class="help-details" id="release-notes">
+        <div class="help-detail-heading">
+            <span class="help-detail-label">03 / WHAT'S NEW</span>
+            <h2>Release notes</h2>
+            <p>
+                Updates and improvements to the KeepTrack experience.
+            </p>
+        </div>
+
+        <div class="help-release-item">
+            <div class="help-release-marker"></div>
+
+            <div class="help-release-content">
+                <span class="help-release-status">CURRENT VERSION</span>
+                <h3>KeepTrack</h3>
+                <p>
+                    This section will document released features,
+                    improvements, and bug fixes as they become
+                    available.
+                </p>
+                <span class="help-release-date">
+                    No release date published
+                </span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         04 / LEGAL — TERMS OF SERVICE
+         ===================================================== -->
+
+    <section class="help-details" id="terms-of-service">
+        <div class="help-detail-heading">
+            <span class="help-detail-label">04 / LEGAL</span>
+            <h2>Terms of service</h2>
+            <p>
+                The conditions that govern the use of KeepTrack.
+            </p>
+        </div>
+
+        <div class="help-information-card">
+            <h3>Using KeepTrack</h3>
+            <p>
+                Use this service lawfully and do not attempt to
+                disrupt its operation, gain unauthorized access,
+                or interfere with other users.
+            </p>
+
+            <h3>Account responsibility</h3>
+            <p>
+                You are responsible for protecting your sign-in
+                credentials and for activity carried out through
+                your account.
+            </p>
+
+            <h3>Service availability</h3>
+            <p>
+                Features and availability may change as KeepTrack
+                develops. The final terms should explain any
+                applicable limitations and responsibilities.
+            </p>
+
+            <p class="help-legal-notice">
+                These are preliminary informational statements,
+                not a complete or finalized legal agreement.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         05 / PRIVACY — PRIVACY POLICY
+         ===================================================== -->
+
+    <section class="help-details" id="privacy-policy">
+        <div class="help-detail-heading">
+            <span class="help-detail-label">05 / PRIVACY</span>
+            <h2>Privacy Policy</h2>
+            <p>
+                Information about how KeepTrack handles personal data.
+            </p>
+        </div>
+
+        <div class="help-information-card">
+            <h3>Information and purpose</h3>
+            <p>
+                KeepTrack uses account and task information to
+                provide its functionality. The final policy should
+                identify the specific information collected and
+                explain the purposes for which it is processed.
+            </p>
+
+            <h3>Storage and security</h3>
+            <p>
+                The final policy should describe where account and
+                task data are stored, how they are protected, and
+                which service providers may process them.
+            </p>
+
+            <h3>Your choices</h3>
+            <p>
+                You can use the account controls available in
+                KeepTrack, including the account deletion option.
+                The final policy should explain any applicable
+                data retention requirements and deletion procedures.
+            </p>
+
+            <p class="help-legal-notice">
+                This is a preliminary outline, not a finalized
+                privacy policy. Confirm the application's actual
+                data practices before publishing it as official policy.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER — STILL NEED HELP
+         ===================================================== -->
+
+    <footer class="help-footer">
+        <h2>Still need help?</h2>
+        <p>
+            If you have a problem or an idea for improving KeepTrack,
+            visit the Feedback page.
+        </p>
+
+        <a class="help-footer-link" asp-page="/Feedback/Feedback">
+            Go to Feedback <span aria-hidden="true">→</span>
+        </a>
+    </footer>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/help.js"
+            asp-append-version="true"></script>
+}

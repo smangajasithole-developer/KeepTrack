@@ -1,0 +1,457 @@
+/* =====================================================
+   KEEP TRACK — FEEDBACK PAGE
+   Composed of: header, alerts, feedback form card,
+   character counter, submit actions, and footer note.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+    --kt-success-text: #065f46;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+    --kt-warning-text: #92400e;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+    --kt-danger-text: #991b1b;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   ===================================================== */
+
+.feedback-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.feedback-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.feedback-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.feedback-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.feedback-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   4. ALERTS (Success / Error)
+   ===================================================== */
+
+.feedback-alert {
+    padding: 14px 20px;
+    border-radius: var(--kt-radius);
+    border: 1px solid transparent;
+    font-size: 13.5px;
+    line-height: 1.5;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.feedback-alert-success {
+    background: var(--kt-success-soft);
+    color: var(--kt-success-text);
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+.feedback-alert-error {
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.feedback-alert.is-hiding {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
+
+/* =====================================================
+   5. FEEDBACK CARD
+   ===================================================== */
+
+.feedback-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.feedback-card-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--kt-border);
+}
+
+.feedback-card-heading h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.feedback-card-heading p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   6. FORM CONTROLS
+   Removed max-width — inputs stretch full card width.
+   ===================================================== */
+
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.feedback-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.feedback-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+.feedback-form-group select,
+.feedback-form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: var(--kt-radius);
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 13.5px;
+    font-family: inherit;
+    line-height: 1.5;
+    outline: none;
+    transition: all var(--kt-transition);
+}
+
+.feedback-form-group textarea {
+    resize: vertical;
+    min-height: 180px;
+}
+
+.feedback-form-group select:hover,
+.feedback-form-group textarea:hover {
+    border-color: #cbd2dd;
+}
+
+.feedback-form-group select:focus,
+.feedback-form-group textarea:focus {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    box-shadow: 0 0 0 3px rgba(18, 23, 43, 0.08);
+}
+
+.feedback-form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   7. FIELD FOOTER (help text + counter)
+   ===================================================== */
+
+.feedback-field-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.feedback-help-text {
+    font-size: 12px;
+    color: var(--kt-text-soft);
+}
+
+.feedback-character-limit {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kt-text-soft);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--kt-transition);
+}
+
+.feedback-character-limit.is-near-limit {
+    color: var(--kt-warning-text);
+}
+
+.feedback-character-limit.is-at-limit {
+    color: var(--kt-danger-text);
+}
+
+
+/* =====================================================
+   8. VALIDATION
+   ===================================================== */
+
+.feedback-validation-summary {
+    padding: 12px 16px;
+    margin: 0;
+    background: var(--kt-danger-soft);
+    color: var(--kt-danger-text);
+    border-left: 3px solid var(--kt-danger);
+    border-radius: var(--kt-radius-sm);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.feedback-validation-summary ul {
+    margin: 4px 0 0;
+    padding-left: 20px;
+}
+
+.feedback-validation-summary:empty,
+.feedback-field-error:empty {
+    display: none;
+}
+
+.feedback-field-error {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--kt-danger-text);
+    line-height: 1.4;
+}
+
+.input-validation-error {
+    border-color: var(--kt-danger) !important;
+    background: #fff5f5 !important;
+}
+
+.input-validation-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+
+/* =====================================================
+   9. SUBMIT BUTTON
+   ===================================================== */
+
+.feedback-form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--kt-border);
+    width: 100%;
+}
+
+.feedback-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--kt-radius-pill);
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: var(--kt-shadow-sm);
+    transition: all var(--kt-transition);
+}
+
+.feedback-submit-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.feedback-submit-button:disabled {
+    opacity: 0.7;
+    cursor: progress;
+    transform: none;
+    box-shadow: var(--kt-shadow-sm);
+}
+
+
+/* =====================================================
+   10. CLOSING NOTE
+   ===================================================== */
+
+.feedback-note {
+    padding: 20px 24px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    text-align: center;
+}
+
+.feedback-note strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--kt-text);
+}
+
+.feedback-note p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   11. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 720px) {
+    .feedback-header {
+        padding: 18px 20px;
+    }
+
+    .feedback-header h1 {
+        font-size: 22px;
+    }
+
+    .feedback-card {
+        padding: 20px;
+    }
+
+    .feedback-field-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .feedback-form-actions {
+        flex-direction: column;
+    }
+
+    .feedback-submit-button {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
+   12. FOCUS & MOTION
+   ===================================================== */
+
+.feedback-submit-button:focus-visible,
+.feedback-form-group select:focus-visible,
+.feedback-form-group textarea:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

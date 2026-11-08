@@ -1,0 +1,23 @@
+
+@page
+@model keeptrack.Pages.EmailTestModel
+
+@{
+    ViewData["Title"] = "Email Test";
+}
+
+<h1>Email Test</h1>
+
+<form method="post">
+    <div>
+        <label asp-for="RecipientEmail">Recipient email</label>
+        <input asp-for="RecipientEmail" type="email" required />
+    </div>
+
+    <button type="submit">Send Test Email</button>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.Message))
+{
+    <p role="status">@Model.Message</p>
+}

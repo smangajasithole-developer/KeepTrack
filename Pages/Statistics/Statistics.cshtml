@@ -1,0 +1,359 @@
+@page "/Statistics"
+@model StatisticsModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/statistics.css"
+          asp-append-version="true" />
+}
+
+<div class="statistics-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="statistics-header">
+
+        <div>
+            <span class="statistics-eyebrow">
+                PRODUCTIVITY ANALYTICS
+            </span>
+
+            <h1>Statistics</h1>
+
+            <p>
+                Understand your task progress, deadlines, and activity at a glance.
+            </p>
+        </div>
+
+        <div class="statistics-header-actions">
+
+            <a asp-page="/Tasks/Tasks"
+               class="statistics-secondary-button">
+                View Tasks
+            </a>
+
+            <a asp-page="/Tasks/AddTask/AddTask"
+               class="statistics-primary-button">
+                Add Task
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATA FEEDERS (read by statistics.js)
+         ===================================================== -->
+
+    <!-- Overview + scheduling numbers -->
+    <div id="statistics-data"
+         hidden
+         data-total="@Model.TotalTasks"
+         data-completed="@Model.CompletedTasks"
+         data-pending="@Model.PendingTasks"
+         data-overdue="@Model.OverdueTasks"
+         data-completion="@Model.CompletionPercentage"
+         data-scheduled="@Model.ScheduledTasks"
+         data-start-immediately="@Model.StartImmediatelyTasks"
+         data-with-due-date="@Model.TasksWithDueDate"
+         data-without-due-date="@Model.TasksWithoutDueDate"
+         data-date-format="@Model.DateFormat">
+    </div>
+
+    <!-- Activity data for the line chart -->
+    <div id="statistics-activity-data" hidden>
+        @foreach (var item in Model.Activity)
+        {
+            <span class="statistics-activity-item"
+                  data-label="@item.Label"
+                  data-full-date="@item.FullDateLabel"
+                  data-count="@item.Count">
+            </span>
+        }
+    </div>
+
+
+    @if (Model.TotalTasks > 0)
+    {
+        <!-- =================================================
+             OVERVIEW CARDS
+             ================================================= -->
+
+        <section class="statistics-overview">
+
+            <div class="statistics-card">
+                <span class="statistics-card-label">Total Tasks</span>
+                <strong class="statistics-card-value">@Model.TotalTasks</strong>
+                <span class="statistics-card-description">
+                    All tasks in your account
+                </span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-label">Completed</span>
+                <strong class="statistics-card-value">@Model.CompletedTasks</strong>
+                <span class="statistics-card-description">
+                    Tasks successfully completed
+                </span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-label">Pending</span>
+                <strong class="statistics-card-value">@Model.PendingTasks</strong>
+                <span class="statistics-card-description">
+                    Tasks not completed and not overdue
+                </span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-label">Overdue</span>
+                <strong class="statistics-card-value">@Model.OverdueTasks</strong>
+                <span class="statistics-card-description">
+                    Uncompleted tasks past their deadlines
+                </span>
+            </div>
+
+            <div class="statistics-card">
+                <span class="statistics-card-label">Completion Rate</span>
+                <strong class="statistics-card-value">@Model.CompletionPercentage%</strong>
+                <span class="statistics-card-description">
+                    Overall task completion
+                </span>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MAIN CHARTS
+             ================================================= -->
+
+        <section class="statistics-chart-grid">
+
+            <!-- ---------- Task Status Doughnut ---------- -->
+
+            <div class="statistics-panel">
+
+                <div class="statistics-panel-header">
+                    <div>
+                        <span class="statistics-eyebrow">TASK BREAKDOWN</span>
+                        <h2>Task Status</h2>
+                        <p>Completed, pending, and overdue tasks.</p>
+                    </div>
+                </div>
+
+                <div class="statistics-chart-area statistics-status-chart-area">
+                    <div class="statistics-status-chart">
+                        <canvas id="taskStatusChart"></canvas>
+
+                        <div class="statistics-status-center">
+                            <strong>@Model.TotalTasks</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="statistics-legend">
+                    <div class="statistics-legend-item">
+                        <span class="statistics-legend-dot completed"></span>
+                        <span>Completed</span>
+                    </div>
+                    <div class="statistics-legend-item">
+                        <span class="statistics-legend-dot pending"></span>
+                        <span>Pending</span>
+                    </div>
+                    <div class="statistics-legend-item">
+                        <span class="statistics-legend-dot overdue"></span>
+                        <span>Overdue</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ---------- Task Activity Line Chart ---------- -->
+
+            <div class="statistics-panel">
+
+                <div class="statistics-panel-header">
+                    <div>
+                        <span class="statistics-eyebrow">ACTIVITY</span>
+                        <h2>Task Activity</h2>
+                        <p>Tasks created during the last seven days.</p>
+                    </div>
+                </div>
+
+                <div class="statistics-chart-area">
+                    <canvas id="taskActivityChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SECONDARY CHARTS AND SUMMARY
+             ================================================= -->
+
+        <section class="statistics-secondary-grid">
+
+            <!-- ---------- Status Comparison Bar Chart ---------- -->
+
+            <div class="statistics-panel">
+
+                <div class="statistics-panel-header">
+                    <div>
+                        <span class="statistics-eyebrow">COMPARISON</span>
+                        <h2>Status Comparison</h2>
+                        <p>Compare completed, pending, and overdue workloads.</p>
+                    </div>
+                </div>
+
+                <div class="statistics-bar-chart">
+                    <canvas id="statusComparisonChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <!-- ---------- Productivity Summary ---------- -->
+
+            <div class="statistics-panel">
+
+                <div class="statistics-panel-header">
+                    <div>
+                        <span class="statistics-eyebrow">SUMMARY</span>
+                        <h2>Productivity Summary</h2>
+                        <p>A quick overview of your current progress.</p>
+                    </div>
+                </div>
+
+                <div class="statistics-summary">
+
+                    <div class="statistics-summary-row">
+                        <div>
+                            <strong>Completed Tasks</strong>
+                            <span>Tasks you have finished.</span>
+                        </div>
+                        <strong>@Model.CompletedTasks</strong>
+                    </div>
+
+                    <div class="statistics-summary-row">
+                        <div>
+                            <strong>Pending Tasks</strong>
+                            <span>Tasks not yet overdue.</span>
+                        </div>
+                        <strong>@Model.PendingTasks</strong>
+                    </div>
+
+                    <div class="statistics-summary-row">
+                        <div>
+                            <strong>Overdue Tasks</strong>
+                            <span>Tasks requiring overdue attention.</span>
+                        </div>
+                        <strong>@Model.OverdueTasks</strong>
+                    </div>
+
+                    <div class="statistics-summary-row">
+                        <div>
+                            <strong>Completion Rate</strong>
+                            <span>Percentage of all tasks completed.</span>
+                        </div>
+                        <strong>@Model.CompletionPercentage%</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SCHEDULING AND DEADLINE INSIGHTS
+             ================================================= -->
+
+        <section class="statistics-panel statistics-deadline-panel">
+
+            <div class="statistics-panel-header">
+                <div>
+                    <span class="statistics-eyebrow">SCHEDULING INSIGHTS</span>
+                    <h2>Task Planning</h2>
+                    <p>Understand how your tasks are scheduled and managed.</p>
+                </div>
+            </div>
+
+            <div class="statistics-planning-grid">
+
+                <div class="statistics-planning-card">
+                    <span class="statistics-planning-label">Scheduled Starts</span>
+                    <strong class="statistics-planning-value">@Model.ScheduledTasks</strong>
+                    <span class="statistics-card-description">
+                        Tasks configured to start at a scheduled time
+                    </span>
+                </div>
+
+                <div class="statistics-planning-card">
+                    <span class="statistics-planning-label">Start Right Away</span>
+                    <strong class="statistics-planning-value">@Model.StartImmediatelyTasks</strong>
+                    <span class="statistics-card-description">
+                        Tasks configured to start immediately
+                    </span>
+                </div>
+
+                <div class="statistics-planning-card">
+                    <span class="statistics-planning-label">With Due Dates</span>
+                    <strong class="statistics-planning-value">@Model.TasksWithDueDate</strong>
+                    <span class="statistics-card-description">
+                        Tasks with a defined deadline
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+    }
+    else
+    {
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+
+        <section class="statistics-empty-state">
+
+            <div>
+                <span class="statistics-eyebrow">NO DATA YET</span>
+
+                <h2>Your statistics will appear here.</h2>
+
+                <p>
+                    Create your first task and KeepTrack will begin
+                    recording your productivity data.
+                </p>
+
+                <a asp-page="/Tasks/AddTask/AddTask"
+                   class="statistics-primary-button">
+                    Create Your First Task
+                </a>
+            </div>
+
+        </section>
+    }
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="~/js/statistics.js"
+            asp-append-version="true"></script>
+}

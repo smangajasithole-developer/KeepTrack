@@ -1,0 +1,161 @@
+@page "/Notifications/Notifications"
+@model keeptrack.Pages.Notifications.NotificationsModel
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/notifications.css"
+          asp-append-version="true" />
+}
+
+<div class="notifications-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="notifications-header">
+        <div>
+            <span class="notifications-eyebrow">
+                ACTIVITY CENTER
+            </span>
+
+            <h1>Notifications</h1>
+
+            <p>
+                You have @Model.UnreadCount unread 
+                notification@(Model.UnreadCount == 1 ? "" : "s").
+            </p>
+        </div>
+
+        @if (Model.UnreadCount > 0)
+        {
+            <div>
+                <form method="post" 
+                      asp-page-handler="MarkAllRead"
+                      class="notifications-mark-all-form">
+
+                    <button type="submit" 
+                            class="notifications-secondary-button"
+                            data-submitting="Marking all...">
+                        Mark all as read
+                    </button>
+
+                </form>
+            </div>
+        }
+    </div>
+
+
+    <!-- =====================================================
+         NOTIFICATIONS LIST
+         ===================================================== -->
+
+    @if (Model.Notifications.Count == 0)
+    {
+        <!-- =================================================
+             EMPTY STATE
+             ================================================= -->
+
+        <section class="notifications-empty-state">
+
+            <div class="notifications-empty-icon">
+                🔔
+            </div>
+
+            <h2>You're all caught up</h2>
+
+            <p>
+                You don't have any notifications right now. 
+                We'll let you know when something new arrives.
+            </p>
+
+        </section>
+    }
+    else
+    {
+        <section class="notifications-list">
+
+            @foreach (var notification in Model.Notifications)
+            {
+                <article class="notification-card @(notification.IsRead ? "read" : "unread")">
+
+                    <!-- ---------- 1. Icon ---------- -->
+                    <div class="notification-icon">
+                        @switch (notification.Type)
+                        {
+                            case "OverdueTask":
+                                <text>⏰</text>
+                                break;
+                            case "TaskReminder":
+                                <text>📌</text>
+                                break;
+                            case "SystemUpdate":
+                                <text>ℹ️</text>
+                                break;
+                            default:
+                                <text>🔔</text>
+                                break;
+                        }
+                    </div>
+
+                    <!-- ---------- 2. Content ---------- -->
+                    <div class="notification-content">
+
+                        <div class="notification-title-row">
+                            <h2 class="notification-title">
+                                @notification.Title
+                            </h2>
+
+                            @if (!notification.IsRead)
+                            {
+                                <span class="notification-unread-label">
+                                    NEW
+                                </span>
+                            }
+                        </div>
+
+                        <p class="notification-message">
+                            @notification.Message
+                        </p>
+
+                        <div class="notification-meta">
+                            @notification.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")
+                        </div>
+
+                    </div>
+
+                    <!-- ---------- 3. Action ---------- -->
+                    <div class="notification-actions">
+                        @if (!notification.IsRead)
+                        {
+                            <form method="post"
+                                  asp-page-handler="MarkRead"
+                                  asp-route-id="@notification.Id"
+                                  class="notification-read-form">
+
+                                <button type="submit"
+                                        class="notification-action-button"
+                                        data-submitting="Reading...">
+                                    Mark read
+                                </button>
+
+                            </form>
+                        }
+                    </div>
+
+                </article>
+            }
+
+        </section>
+    }
+
+</div>
+
+@section Scripts {
+    <script src="~/js/notifications.js"
+            asp-append-version="true"></script>
+}

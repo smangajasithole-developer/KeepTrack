@@ -1,0 +1,129 @@
+@page "/Account/SignIn"
+@model keeptrack.Pages.Account.SignIn.SignInModel
+
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/signin.css"
+          asp-append-version="true" />
+}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <div class="auth-header">
+            <span class="auth-eyebrow">KEEPTRACK</span>
+
+            <h1>Welcome back</h1>
+
+            <p>
+                Sign in to your KeepTrack account to access
+                your tasks and workspace.
+            </p>
+        </div>
+
+
+        <!-- =====================================================
+             SIGN IN FORM
+             ===================================================== -->
+
+        <form method="post" class="auth-form" id="sign-in-form">
+
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="validation-summary"></div>
+
+
+            <!-- ---------- Account Information ---------- -->
+
+            <div class="auth-section">
+
+                <div class="auth-section-heading">
+                    <h2>Account Information</h2>
+                    <p>Enter your account details to continue.</p>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.EmailOrUsername">Email or Username</label>
+
+                    <input asp-for="Input.EmailOrUsername"
+                           class="form-control"
+                           id="sign-in-email"
+                           placeholder="Enter your email or username"
+                           autocomplete="username" />
+
+                    <span asp-validation-for="Input.EmailOrUsername"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Password">Password</label>
+
+                    <input asp-for="Input.Password"
+                           class="form-control"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" />
+
+                    <span asp-validation-for="Input.Password"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="forgot-password-link">
+                    <a asp-page="/Account/ForgotPassword/ForgotPassword">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <div class="form-checkbox">
+                    <input asp-for="Input.RememberMe" type="checkbox" />
+
+                    <label asp-for="Input.RememberMe">Remember me</label>
+                </div>
+
+            </div>
+
+
+            <!-- ---------- Submit ---------- -->
+
+            <button type="submit"
+                    class="auth-submit-button"
+                    id="sign-in-submit"
+                    data-submitting="Signing in...">
+                Sign In
+            </button>
+
+        </form>
+
+
+        <!-- =====================================================
+             FOOTER — SIGN UP LINK
+             ===================================================== -->
+
+        <div class="auth-footer">
+            <span>Don't have an account?</span>
+
+            <a asp-page="/Account/SignUp/SignUp"
+               asp-route-returnUrl="@Model.ReturnUrl">
+                Sign up
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/signin.js"
+            asp-append-version="true"></script>
+}

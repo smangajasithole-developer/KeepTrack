@@ -1,0 +1,38 @@
+# .NET build output
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Local databases and backups
+*.db
+*.db-*
+*.db.*
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+secrets.json
+
+# Certificates and private keys
+*.pfx
+*.pem
+*.key
+
+# Cloudflare local development data
+.wrangler/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+# Backup files
+*.bakgit diff --cached --stat
+# Backup files
+
+# Backup files
+*.bak
+tasks.json

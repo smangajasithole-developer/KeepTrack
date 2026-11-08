@@ -1,0 +1,649 @@
+/* =====================================================
+   KEEP TRACK — STATISTICS PAGE
+   Composed of: header, overview cards, main charts
+   (doughnut + line), secondary charts (bar + summary),
+   planning insights, and empty state.
+   ===================================================== */
+
+
+/* =====================================================
+   1. DESIGN TOKENS
+   ===================================================== */
+
+:root {
+    --kt-bg: #dfe3e8;
+    --kt-surface: #ffffff;
+    --kt-surface-alt: #f7f8fa;
+    --kt-surface-tint: #eef1f5;
+
+    --kt-border: #eceef2;
+    --kt-border-strong: #dfe3e9;
+
+    --kt-text: #0f1626;
+    --kt-text-muted: #6b7280;
+    --kt-text-soft: #9ca3af;
+
+    --kt-primary: #12172b;
+    --kt-primary-hover: #0a0e1c;
+    --kt-primary-contrast: #ffffff;
+
+    --kt-accent: #7c8cff;
+    --kt-accent-soft: #eef0ff;
+
+    --kt-success: #22c55e;
+    --kt-success-soft: #e4f7ea;
+
+    --kt-warning: #f59e0b;
+    --kt-warning-soft: #fef3d6;
+
+    --kt-danger: #ef4444;
+    --kt-danger-soft: #fde8e8;
+
+    --kt-info: #3b82f6;
+    --kt-info-soft: #e6efff;
+
+    --kt-radius-sm: 10px;
+    --kt-radius: 14px;
+    --kt-radius-lg: 22px;
+    --kt-radius-pill: 999px;
+
+    --kt-shadow-xs: 0 1px 2px rgba(15, 22, 38, 0.04);
+    --kt-shadow-sm: 0 2px 6px rgba(15, 22, 38, 0.05);
+    --kt-shadow: 0 6px 20px rgba(15, 22, 38, 0.06);
+    --kt-shadow-md: 0 12px 32px rgba(15, 22, 38, 0.08);
+    --kt-shadow-lg: 0 24px 60px rgba(15, 22, 38, 0.14);
+
+    --kt-transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =====================================================
+   2. PAGE WRAPPER
+   Fills the available main-content width.
+   ===================================================== */
+
+.statistics-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    color: var(--kt-text);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =====================================================
+   3. PAGE HEADER
+   ===================================================== */
+
+.statistics-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.statistics-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.statistics-header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.statistics-header p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+.statistics-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+/* =====================================================
+   4. BUTTONS
+   ===================================================== */
+
+.statistics-primary-button,
+.statistics-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: var(--kt-radius-pill);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+    transition: all var(--kt-transition);
+}
+
+.statistics-primary-button {
+    background: var(--kt-primary);
+    color: var(--kt-primary-contrast);
+    box-shadow: var(--kt-shadow-sm);
+}
+
+.statistics-primary-button:hover {
+    background: var(--kt-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--kt-shadow);
+}
+
+.statistics-secondary-button {
+    background: var(--kt-surface);
+    color: var(--kt-text);
+    border-color: var(--kt-border-strong);
+}
+
+.statistics-secondary-button:hover {
+    background: var(--kt-surface-alt);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary);
+}
+
+
+/* =====================================================
+   5. OVERVIEW CARDS
+   ===================================================== */
+
+.statistics-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.statistics-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 20px 18px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+    overflow: hidden;
+    transition: all var(--kt-transition);
+}
+
+.statistics-card::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--kt-accent);
+}
+
+.statistics-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--kt-shadow-md);
+    border-color: var(--kt-border-strong);
+}
+
+.statistics-card-label {
+    padding-left: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--kt-text-muted);
+    margin-bottom: 2px;
+}
+
+.statistics-card-value {
+    margin-top: 4px;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.statistics-card-description {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--kt-text-soft);
+}
+
+/* Per-card accent dots (matches dashboard) */
+.statistics-overview .statistics-card:nth-child(1)::before { background: var(--kt-info); }
+.statistics-overview .statistics-card:nth-child(2)::before { background: var(--kt-success); }
+.statistics-overview .statistics-card:nth-child(3)::before { background: #64748b; }
+.statistics-overview .statistics-card:nth-child(4)::before { background: var(--kt-danger); }
+.statistics-overview .statistics-card:nth-child(5)::before { background: var(--kt-accent); }
+
+
+/* =====================================================
+   6. PANEL BASE
+   ===================================================== */
+
+.statistics-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px;
+    background: var(--kt-surface);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius-lg);
+    box-shadow: var(--kt-shadow-xs);
+}
+
+.statistics-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.statistics-panel-header h2 {
+    margin: 4px 0;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--kt-text);
+}
+
+.statistics-panel-header p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   7. CHART GRIDS
+   ===================================================== */
+
+.statistics-chart-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(0, 2fr);
+    gap: 20px;
+}
+
+.statistics-secondary-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 20px;
+}
+
+.statistics-chart-area {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    min-height: 260px;
+}
+
+.statistics-bar-chart {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    min-height: 240px;
+}
+
+.statistics-chart-area canvas,
+.statistics-bar-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+/* =====================================================
+   8. TASK STATUS DOUGHNUT
+   ===================================================== */
+
+.statistics-status-chart-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statistics-status-chart {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+}
+
+.statistics-status-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.statistics-status-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    text-align: center;
+}
+
+.statistics-status-center strong {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.statistics-status-center span {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+/* Legend below doughnut */
+.statistics-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--kt-border);
+}
+
+.statistics-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--kt-text-muted);
+}
+
+.statistics-legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.statistics-legend-dot.completed { background: #16a34a; }
+.statistics-legend-dot.pending   { background: #64748b; }
+.statistics-legend-dot.overdue   { background: #dc2626; }
+
+
+/* =====================================================
+   9. PRODUCTIVITY SUMMARY
+   ===================================================== */
+
+.statistics-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.statistics-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--kt-border);
+}
+
+.statistics-summary-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.statistics-summary-row > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.statistics-summary-row strong {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--kt-text);
+}
+
+.statistics-summary-row > strong {
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.statistics-summary-row span {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   10. PLANNING INSIGHTS
+   ===================================================== */
+
+.statistics-deadline-panel {
+    gap: 22px;
+}
+
+.statistics-planning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.statistics-planning-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px;
+    background: var(--kt-surface-alt);
+    border: 1px solid var(--kt-border);
+    border-radius: var(--kt-radius);
+    transition: all var(--kt-transition);
+}
+
+.statistics-planning-card:hover {
+    background: #ffffff;
+    border-color: var(--kt-border-strong);
+    box-shadow: var(--kt-shadow-xs);
+    transform: translateY(-1px);
+}
+
+.statistics-planning-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kt-text-soft);
+}
+
+.statistics-planning-value {
+    margin-top: 2px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--kt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =====================================================
+   11. EMPTY STATE
+   ===================================================== */
+
+.statistics-empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 72px 32px;
+    background: var(--kt-surface);
+    border: 1px dashed var(--kt-border-strong);
+    border-radius: var(--kt-radius-lg);
+    text-align: center;
+}
+
+.statistics-empty-state > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 460px;
+}
+
+.statistics-empty-state h2 {
+    margin: 8px 0 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--kt-text);
+}
+
+.statistics-empty-state p {
+    margin: 0 0 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--kt-text-muted);
+}
+
+
+/* =====================================================
+   12. RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1080px) {
+    .statistics-chart-grid,
+    .statistics-secondary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .statistics-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px;
+    }
+
+    .statistics-header h1 {
+        font-size: 22px;
+    }
+
+    .statistics-header-actions {
+        width: 100%;
+    }
+
+    .statistics-header-actions .statistics-primary-button,
+    .statistics-header-actions .statistics-secondary-button {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .statistics-panel {
+        padding: 18px;
+    }
+
+    .statistics-chart-area {
+        height: 260px;
+        min-height: 220px;
+    }
+
+    .statistics-bar-chart {
+        height: 240px;
+        min-height: 200px;
+    }
+
+    .statistics-overview {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .statistics-card {
+        padding: 16px;
+    }
+
+    .statistics-card-value {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .statistics-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .statistics-planning-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .statistics-summary-row {
+        padding: 12px 0;
+    }
+
+    .statistics-summary-row > strong {
+        font-size: 18px;
+    }
+
+    .statistics-empty-state {
+        padding: 48px 20px;
+    }
+}
+
+
+/* =====================================================
+   13. FOCUS & MOTION
+   ===================================================== */
+
+.statistics-primary-button:focus-visible,
+.statistics-secondary-button:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}

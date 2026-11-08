@@ -1,0 +1,567 @@
+@page "/Settings"
+@model SettingsModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Settings";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/settings.css"
+          asp-append-version="true" />
+}
+
+<div class="settings-page">
+
+    <!-- ======================================================
+         PAGE HEADER
+         ====================================================== -->
+
+    <div class="settings-header">
+        <div>
+            <span class="settings-eyebrow">ACCOUNT SETTINGS</span>
+
+            <h1>Settings</h1>
+
+            <p>
+                Manage your account and KeepTrack preferences.
+            </p>
+        </div>
+    </div>
+
+    <!-- ======================================================
+         SUCCESS MESSAGE
+         ====================================================== -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+    {
+        <div class="settings-message settings-message-success"
+             role="status"
+             aria-live="polite">
+
+            <strong>Success</strong>
+            <p>@Model.SuccessMessage</p>
+
+        </div>
+    }
+
+    <!-- ======================================================
+         ERROR MESSAGE
+         ====================================================== -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="settings-message settings-message-error"
+             role="alert"
+             aria-live="assertive">
+
+            <strong>Unable to save settings</strong>
+            <p>@Model.ErrorMessage</p>
+
+        </div>
+    }
+
+    <!-- ======================================================
+         MODEL VALIDATION ERRORS
+         ====================================================== -->
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="settings-message settings-message-error"
+             role="alert"
+             aria-live="assertive">
+
+            <strong>Please check the following:</strong>
+
+            <ul>
+                @foreach (var entry in ViewData.ModelState)
+                {
+                    @foreach (var error in entry.Value.Errors)
+                    {
+                        <li>
+                            @if (!string.IsNullOrWhiteSpace(entry.Key))
+                            {
+                                <strong>@entry.Key:</strong>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(error.ErrorMessage))
+                            {
+                                @error.ErrorMessage
+                            }
+                            else
+                            {
+                                <span>The submitted value is invalid.</span>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+
+        </div>
+    }
+
+    <!-- ======================================================
+         GENERAL
+         ====================================================== -->
+
+    <section class="settings-section" id="general-settings">
+
+        <button type="button"
+                class="settings-section-toggle"
+                aria-expanded="false"
+                aria-controls="general-settings-content">
+
+            <span class="settings-section-heading">
+                <strong>General</strong>
+                <span class="settings-section-summary">
+                    Manage your date format and start page.
+                </span>
+            </span>
+
+            <span class="settings-section-arrow" aria-hidden="true">›</span>
+
+        </button>
+
+        <div class="settings-section-content" id="general-settings-content">
+            
+            <!-- Content Wrapper for full-width layout -->
+            <div class="settings-content-inner">
+
+                <form method="post" asp-page-handler="SaveGeneral">
+
+                    <!-- DATE FORMAT -->
+                    <div class="settings-form-group">
+                        <label for="DateFormat">Date format</label>
+
+                        <select id="DateFormat" name="DateFormat">
+                            <option value="yyyy/MM/dd" selected="@(Model.DateFormat == "yyyy/MM/dd")">2026/12/24</option>
+                            <option value="dd/MM/yyyy" selected="@(Model.DateFormat == "dd/MM/yyyy")">24/12/2026</option>
+                            <option value="dd MMM yyyy" selected="@(Model.DateFormat == "dd MMM yyyy")">24 Dec 2026</option>
+                            <option value="yyyy MMM dd" selected="@(Model.DateFormat == "yyyy MMM dd")">2026 Dec 24</option>
+                            <option value="MMMM dd, yyyy" selected="@(Model.DateFormat == "MMMM dd, yyyy")">December 24, 2026</option>
+                        </select>
+                    </div>
+
+                    <!-- START PAGE -->
+                    <div class="settings-form-group">
+                        <label for="StartPage">Start page</label>
+
+                        <select id="StartPage" name="StartPage">
+                            <option value="Dashboard" selected="@(Model.StartPage == "Dashboard")">Dashboard</option>
+                            <option value="Tasks" selected="@(Model.StartPage == "Tasks")">Tasks</option>
+                            <option value="Statistics" selected="@(Model.StartPage == "Statistics")">Statistics</option>
+                        </select>
+                    </div>
+
+                    <!-- SAVE GENERAL SETTINGS -->
+                    <div class="settings-form-actions">
+                        <button type="submit" class="settings-save-button">
+                            Save General Settings
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         PERSONAL INFORMATION
+         ====================================================== -->
+
+    <section class="settings-section" id="personal-information-settings">
+
+        <button type="button"
+                class="settings-section-toggle"
+                aria-expanded="@(Model.IsEditingProfile ? "true" : "false")"
+                aria-controls="settings-account-content">
+
+            <span class="settings-section-heading">
+                <strong>Personal Information</strong>
+                <span class="settings-section-summary">
+                    View and update your personal information.
+                </span>
+            </span>
+
+            <span class="settings-section-arrow" aria-hidden="true">›</span>
+
+        </button>
+
+        <div id="settings-account-content" class="settings-section-content">
+            
+            <div class="settings-content-inner">
+
+                <!-- PROFILE DETAILS -->
+                <div id="profile-display" hidden="@Model.IsEditingProfile">
+
+                    <div class="settings-account-grid">
+                        <div class="settings-field">
+                            <span class="settings-field-label">First Name</span>
+                            <strong>@Model.CurrentUser?.FirstName</strong>
+                        </div>
+                        <div class="settings-field">
+                            <span class="settings-field-label">Middle Name</span>
+                            <strong>@(string.IsNullOrWhiteSpace(Model.CurrentUser?.MiddleName) ? "Not provided" : Model.CurrentUser.MiddleName)</strong>
+                        </div>
+                        <div class="settings-field">
+                            <span class="settings-field-label">Last Name</span>
+                            <strong>@Model.CurrentUser?.LastName</strong>
+                        </div>
+                        <div class="settings-field">
+                            <span class="settings-field-label">Gender</span>
+                            <strong>@(string.IsNullOrWhiteSpace(Model.CurrentUser?.Gender) ? "Not provided" : Model.CurrentUser.Gender)</strong>
+                        </div>
+                    </div>
+
+                    <div class="settings-section-action">
+                        <button type="button" class="settings-primary-button" id="edit-profile-button">
+                            Edit Profile
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- EDIT PROFILE FORM -->
+                <form method="post" asp-page-handler="SaveProfile" id="edit-profile-form" hidden="@(!Model.IsEditingProfile)">
+                    <div class="settings-account-grid">
+                        <div class="settings-form-group">
+                            <label asp-for="ProfileInput.FirstName">First Name</label>
+                            <input asp-for="ProfileInput.FirstName" autocomplete="given-name" required />
+                            <span asp-validation-for="ProfileInput.FirstName" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="ProfileInput.MiddleName">Middle Name (optional)</label>
+                            <input asp-for="ProfileInput.MiddleName" autocomplete="additional-name" />
+                            <span asp-validation-for="ProfileInput.MiddleName" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="ProfileInput.LastName">Last Name</label>
+                            <input asp-for="ProfileInput.LastName" autocomplete="family-name" required />
+                            <span asp-validation-for="ProfileInput.LastName" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="ProfileInput.Gender">Gender</label>
+                            <input asp-for="ProfileInput.Gender" autocomplete="off" required />
+                            <span asp-validation-for="ProfileInput.Gender" class="settings-validation"></span>
+                        </div>
+                    </div>
+
+                    <div class="settings-section-action">
+                        <button type="submit" class="settings-primary-button">Save Changes</button>
+                        <button type="button" class="settings-secondary-button" id="cancel-edit-profile-button">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         PASSWORD & SECURITY
+         ====================================================== -->
+
+    <section class="settings-section" id="password-security-settings">
+
+        <button type="button"
+                class="settings-section-toggle"
+                aria-expanded="false"
+                aria-controls="settings-security-content">
+
+            <span class="settings-section-heading">
+                <strong>Password &amp; Security</strong>
+                <span class="settings-section-summary">
+                    Manage your username, email address, and password.
+                    Verify your identity before making changes.
+                </span>
+            </span>
+
+            <span class="settings-section-arrow" aria-hidden="true">›</span>
+
+        </button>
+
+        <div id="settings-security-content" class="settings-section-content">
+            
+            <div class="settings-content-inner">
+
+                <!-- CURRENT ACCOUNT DETAILS -->
+                <div id="security-account-display">
+                    <div class="settings-account-grid">
+                        <div class="settings-field">
+                            <span class="settings-field-label">Username</span>
+                            <strong>@Model.CurrentUser?.UserName</strong>
+                        </div>
+                        <div class="settings-field">
+                            <span class="settings-field-label">Email Address</span>
+                            <strong>@Model.CurrentUser?.Email</strong>
+                        </div>
+                        <div class="settings-field">
+                            <span class="settings-field-label">Password</span>
+                            <strong>••••••••••••</strong>
+                        </div>
+                    </div>
+
+                    <div class="settings-section-action">
+                        <button type="button" class="settings-primary-button" id="change-security-button">Change</button>
+                    </div>
+                </div>
+
+                <!-- VERIFIED ACCOUNT CHANGE FORM -->
+                <form method="post" asp-page-handler="SaveSecurityChanges" id="security-changes-form" hidden="@(!Model.IsSecurityVerified)">
+                    
+                    <p class="settings-security-notice">
+                        Your identity has been verified. Complete your changes
+                        within five minutes. Leave fields unchanged if you do
+                        not want to update them.
+                    </p>
+
+                    <div class="settings-account-grid">
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.NewUserName">New username</label>
+                            <input asp-for="SecurityInput.NewUserName" autocomplete="username" placeholder="@Model.CurrentUser?.UserName" />
+                            <span asp-validation-for="SecurityInput.NewUserName" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.NewEmail">New email address</label>
+                            <input asp-for="SecurityInput.NewEmail" type="email" autocomplete="email" placeholder="@Model.CurrentUser?.Email" />
+                            <span asp-validation-for="SecurityInput.NewEmail" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.ConfirmNewEmail">Confirm new email address</label>
+                            <input asp-for="SecurityInput.ConfirmNewEmail" type="email" autocomplete="email" />
+                            <span asp-validation-for="SecurityInput.ConfirmNewEmail" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.CurrentPassword">Current password (required to change password)</label>
+                            <input asp-for="SecurityInput.CurrentPassword" type="password" autocomplete="current-password" />
+                            <span asp-validation-for="SecurityInput.CurrentPassword" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.NewPassword">New password</label>
+                            <input asp-for="SecurityInput.NewPassword" type="password" autocomplete="new-password" />
+                            <span asp-validation-for="SecurityInput.NewPassword" class="settings-validation"></span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label asp-for="SecurityInput.ConfirmNewPassword">Confirm new password</label>
+                            <input asp-for="SecurityInput.ConfirmNewPassword" type="password" autocomplete="new-password" />
+                            <span asp-validation-for="SecurityInput.ConfirmNewPassword" class="settings-validation"></span>
+                        </div>
+                    </div>
+
+                    <div class="settings-section-action">
+                        <button type="submit" class="settings-primary-button">Save Security Changes</button>
+                        <button type="button" class="settings-secondary-button" id="cancel-security-changes-button">Cancel</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         PERSONALISATION
+         ====================================================== -->
+
+    <section class="settings-section" id="personalisation-settings">
+
+        <button type="button"
+                class="settings-section-toggle"
+                aria-expanded="false"
+                aria-controls="settings-personalisation-content">
+
+            <span class="settings-section-heading">
+                <strong>Personalisation</strong>
+                <span class="settings-section-summary">
+                    Customise how KeepTrack looks and feels.
+                </span>
+            </span>
+
+            <span class="settings-section-arrow" aria-hidden="true">›</span>
+
+        </button>
+
+        <div id="settings-personalisation-content" class="settings-section-content">
+            
+            <div class="settings-content-inner">
+
+                <form method="post" asp-page-handler="SaveAppearance" id="appearance-settings-form">
+                    <div class="settings-option">
+                        <div class="settings-option-information">
+                            <strong>Appearance</strong>
+                            <span>Choose how KeepTrack appears on your device.</span>
+                        </div>
+
+                        <div class="settings-form-group">
+                            <label for="Appearance">Appearance</label>
+                            <select id="Appearance" name="Appearance">
+                                <option value="System Default" selected="@(Model.Appearance == "System Default")">System Default</option>
+                                <option value="Light" selected="@(Model.Appearance == "Light")">Light</option>
+                                <option value="Dark" selected="@(Model.Appearance == "Dark")">Dark</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </form>
+
+                <!-- BROWSER NOTIFICATIONS -->
+                <div class="settings-option" id="browser-notifications-settings" data-vapid-public-key="@Configuration["Vapid:PublicKey"]">
+                    @Html.AntiForgeryToken()
+
+                    <div class="settings-option-information">
+                        <strong>Browser notifications</strong>
+
+                        <span>
+                            Receive task reminders and other KeepTrack notifications
+                            directly in this browser, even when KeepTrack is not open.
+                            This setting applies only to this browser and device.
+                        </span>
+                    </div>
+
+                    <div class="browser-notification-status"
+                         id="browser-notification-status"
+                         role="status"
+                         aria-live="polite">
+                        Checking browser notification support...
+                    </div>
+
+                    <div class="browser-notification-actions">
+
+                        <button type="button"
+                                class="settings-save-button"
+                                id="enable-browser-notifications-button">
+                            Enable notifications
+                        </button>
+
+                        <button type="button"
+                                class="settings-secondary-button"
+                                id="disable-browser-notifications-button"
+                                hidden>
+                            Disable notifications
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="settings-form-actions">
+                    <button type="submit" class="settings-save-button">Save Appearance</button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         DANGER ZONE
+         ====================================================== -->
+
+    <section class="settings-section settings-danger-section" id="danger-zone-settings">
+
+        <button type="button"
+                class="settings-section-toggle"
+                aria-expanded="false"
+                aria-controls="settings-danger-content">
+
+            <span class="settings-section-heading">
+                <strong>Danger Zone</strong>
+                <span class="settings-section-summary">
+                    Permanently delete your KeepTrack account and associated data.
+                </span>
+            </span>
+
+            <span class="settings-section-arrow" aria-hidden="true">›</span>
+
+        </button>
+
+        <div id="settings-danger-content" class="settings-section-content">
+            
+            <div class="settings-content-inner">
+
+                <div class="settings-danger-content-inner">
+                    <div class="settings-danger-information">
+                        <strong>Delete your account</strong>
+                        <span>This action will permanently remove your account, tasks, and personal settings. This cannot be undone.</span>
+                    </div>
+
+                    <form method="post" asp-page-handler="DeleteAccount" class="settings-delete-account-form">
+                        <div class="settings-form-group">
+                            <label asp-for="DeleteAccountInput.CurrentPassword">Current password</label>
+                            <input asp-for="DeleteAccountInput.CurrentPassword" type="password" autocomplete="current-password" placeholder="Enter your current password" required />
+                            <span asp-validation-for="DeleteAccountInput.CurrentPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="settings-form-group">
+                            <label asp-for="DeleteAccountInput.ConfirmationText">Type DELETE to confirm</label>
+                            <input asp-for="DeleteAccountInput.ConfirmationText" type="text" autocomplete="off" placeholder="DELETE" required />
+                            <span asp-validation-for="DeleteAccountInput.ConfirmationText" class="text-danger"></span>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <button type="submit" class="settings-danger-button" onclick="return confirm('Are you absolutely sure you want to permanently delete your KeepTrack account and all associated data? This action cannot be undone.');">
+                            Delete Account Permanently
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SECURITY VERIFICATION MODAL
+         ====================================================== -->
+
+    <div id="security-verification-modal"
+         class="settings-security-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="security-modal-title"
+         hidden>
+
+        <div class="settings-security-modal-content">
+            <button type="button" class="settings-security-modal-close" id="close-security-modal-button" aria-label="Close verification window">&times;</button>
+            <h3 id="security-modal-title">Verify it's you</h3>
+            <p>We'll send a six-digit verification code to your currently registered email address:</p>
+            <strong id="security-masked-email">@(string.IsNullOrWhiteSpace(Model.CurrentUser?.Email) ? "No email address available" : Model.CurrentUser.Email)</strong>
+            <p id="security-code-status" role="status" aria-live="polite">The code expires after 60 seconds.</p>
+
+            <form method="post" asp-page-handler="SendSecurityCode" id="send-security-code-form">
+                <button type="submit" class="settings-primary-button" id="send-security-code-button" disabled="@(!Model.CanRequestSecurityCode)">Send Verification Code</button>
+            </form>
+
+            <form method="post" asp-page-handler="VerifySecurityCode" id="verify-security-code-form" hidden="@(!Model.IsSecurityCodePending)">
+                <div class="settings-form-group">
+                    <label asp-for="SecurityInput.VerificationCode">Six-digit verification code</label>
+                    <input asp-for="SecurityInput.VerificationCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" />
+                    <span asp-validation-for="SecurityInput.VerificationCode" class="settings-validation"></span>
+                </div>
+                <p id="security-code-countdown" data-expires-at="@Model.SecurityCodeExpiresAtUnixMs">Time remaining: 60 seconds</p>
+                <button type="submit" class="settings-primary-button" id="verify-security-code-button">Verify Code</button>
+            </form>
+
+            <p class="settings-security-request-count" id="security-request-count" data-requests-used="@Model.SecurityRequestsUsed" data-lockout-until="@Model.SecurityLockoutUntilUnixMs">
+                Requests used: @Model.SecurityRequestsUsed of 3
+            </p>
+
+            @if (!Model.CanRequestSecurityCode)
+            {
+                <p class="settings-security-lockout">You have reached the code request limit. Please try again after the 24-hour lockout.</p>
+            }
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/settings.js" asp-append-version="true"></script>
+    <script src="~/js/push-notifications.js" asp-append-version="true"></script>
+}

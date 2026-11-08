@@ -1,0 +1,220 @@
+@page "/Account/SignUp"
+@model keeptrack.Pages.Account.SignUp.SignUpModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/signup.css"
+          asp-append-version="true" />
+}
+
+<div class="auth-page">
+
+    <div class="auth-card">
+
+        <!-- =====================================================
+             PAGE HEADER
+             ===================================================== -->
+
+        <div class="auth-header">
+            <span class="auth-eyebrow">KEEPTRACK</span>
+
+            <h1>Create your account</h1>
+
+            <p>
+                Set up your KeepTrack account to start managing
+                and tracking your tasks.
+            </p>
+        </div>
+
+
+        <!-- =====================================================
+             SIGN UP FORM
+             ===================================================== -->
+
+        <form method="post" class="auth-form" id="sign-up-form">
+
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="validation-summary"></div>
+
+
+            <!-- ---------- Personal Information ---------- -->
+
+            <div class="auth-section">
+
+                <div class="auth-section-heading">
+                    <h2>Personal Information</h2>
+                    <p>Tell us a little about yourself.</p>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.FirstName">First Name</label>
+
+                    <input asp-for="Input.FirstName"
+                           class="form-control"
+                           id="sign-up-firstname"
+                           placeholder="Enter your first name"
+                           autocomplete="given-name" />
+
+                    <span asp-validation-for="Input.FirstName"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.MiddleName">
+                        Middle Name
+                        <span class="optional-label">Optional</span>
+                    </label>
+
+                    <input asp-for="Input.MiddleName"
+                           class="form-control"
+                           placeholder="Enter your middle name"
+                           autocomplete="additional-name" />
+
+                    <span asp-validation-for="Input.MiddleName"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.LastName">Last Name</label>
+
+                    <input asp-for="Input.LastName"
+                           class="form-control"
+                           placeholder="Enter your last name"
+                           autocomplete="family-name" />
+
+                    <span asp-validation-for="Input.LastName"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Gender">Gender</label>
+
+                    <select asp-for="Input.Gender" class="form-control">
+                        <option value="">Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="PreferNotToSay">Prefer not to say</option>
+                    </select>
+
+                    <span asp-validation-for="Input.Gender"
+                          class="validation-message"></span>
+                </div>
+
+            </div>
+
+
+            <!-- ---------- Account Information ---------- -->
+
+            <div class="auth-section">
+
+                <div class="auth-section-heading">
+                    <h2>Account Information</h2>
+                    <p>Choose how you will access your account.</p>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Username">
+                        Username
+                        <span class="optional-label">Optional</span>
+                    </label>
+
+                    <input asp-for="Input.Username"
+                           class="form-control"
+                           placeholder="Choose a username"
+                           autocomplete="username" />
+
+                    <span class="form-help">
+                        Leave this blank to use your email address
+                        as your username.
+                    </span>
+
+                    <span asp-validation-for="Input.Username"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Email">Email Address</label>
+
+                    <input asp-for="Input.Email"
+                           class="form-control"
+                           placeholder="Enter your email address"
+                           autocomplete="email" />
+
+                    <span asp-validation-for="Input.Email"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Password">Password</label>
+
+                    <input asp-for="Input.Password"
+                           class="form-control"
+                           placeholder="Create a password"
+                           autocomplete="new-password" />
+
+                    <span class="form-help">
+                        At least 8 characters with an uppercase letter,
+                        lowercase letter, and number.
+                    </span>
+
+                    <span asp-validation-for="Input.Password"
+                          class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+
+                    <input asp-for="Input.ConfirmPassword"
+                           class="form-control"
+                           placeholder="Confirm your password"
+                           autocomplete="new-password" />
+
+                    <span asp-validation-for="Input.ConfirmPassword"
+                          class="validation-message"></span>
+                </div>
+
+            </div>
+
+
+            <!-- ---------- Submit ---------- -->
+
+            <button type="submit"
+                    class="auth-submit-button"
+                    id="sign-up-submit"
+                    data-submitting="Creating account...">
+                Sign Up
+            </button>
+
+        </form>
+
+
+        <!-- =====================================================
+             FOOTER — SIGN IN LINK
+             ===================================================== -->
+
+        <div class="auth-footer">
+            <span>Already have an account?</span>
+
+            <a asp-page="/Account/SignIn/SignIn"
+               asp-route-returnUrl="@Model.ReturnUrl">
+                Sign in
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/signup.js"
+            asp-append-version="true"></script>
+}

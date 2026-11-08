@@ -1,0 +1,168 @@
+@page "/Feedback"
+@model keeptrack.Pages.Feedback.FeedbackModel
+
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/feedback.css"
+          asp-append-version="true" />
+}
+
+<div class="feedback-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="feedback-header">
+        <div>
+            <span class="feedback-eyebrow">YOUR VOICE MATTERS</span>
+
+            <h1>Feedback</h1>
+
+            <p>
+                Help us improve KeepTrack by sharing your ideas,
+                reporting problems, or telling us about your experience.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         STATUS MESSAGES
+         ===================================================== -->
+
+    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+    {
+        <div class="feedback-alert feedback-alert-success"
+             id="feedback-success-alert"
+             role="status">
+            @Model.SuccessMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="feedback-alert feedback-alert-error"
+             role="alert">
+            @Model.ErrorMessage
+        </div>
+    }
+
+
+    <!-- =====================================================
+         FEEDBACK FORM
+         ===================================================== -->
+
+    <section class="feedback-card">
+
+        <div class="feedback-card-heading">
+            <h2>Share your thoughts</h2>
+
+            <p>
+                Choose a category and describe your feedback below.
+            </p>
+        </div>
+
+        <form method="post"
+              class="feedback-form"
+              id="feedback-form">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="feedback-validation-summary"></div>
+
+            <!-- ---------- Category ---------- -->
+
+            <div class="feedback-form-group">
+
+                <label asp-for="Input.Category">
+                    Feedback category
+                </label>
+
+                <select asp-for="Input.Category">
+                    <option value="">Select a category</option>
+                    <option value="Suggestion">Suggestion</option>
+                    <option value="Bug Report">Bug Report</option>
+                    <option value="General Feedback">General Feedback</option>
+                </select>
+
+                <span asp-validation-for="Input.Category"
+                      class="feedback-field-error"></span>
+
+            </div>
+
+            <!-- ---------- Message ---------- -->
+
+            <div class="feedback-form-group">
+
+                <label asp-for="Input.Message">
+                    Your feedback
+                </label>
+
+                <textarea asp-for="Input.Message"
+                          id="feedback-message"
+                          rows="7"
+                          maxlength="2000"
+                          placeholder="Tell us what you think, what we could improve, or what went wrong..."></textarea>
+
+                <div class="feedback-field-footer">
+
+                    <span class="feedback-help-text">
+                        Please provide at least 10 characters.
+                    </span>
+
+                    <span class="feedback-character-limit"
+                          id="feedback-character-limit">
+                        0 / 2000
+                    </span>
+
+                </div>
+
+                <span asp-validation-for="Input.Message"
+                      class="feedback-field-error"></span>
+
+            </div>
+
+            <!-- ---------- Submit ---------- -->
+
+            <div class="feedback-form-actions">
+
+                <button type="submit"
+                        class="feedback-submit-button"
+                        id="feedback-submit-button"
+                        data-submitting="Sending feedback...">
+                    Submit Feedback
+                </button>
+
+            </div>
+
+            @Html.AntiForgeryToken()
+
+        </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         CLOSING NOTE
+         ===================================================== -->
+
+    <div class="feedback-note">
+        <strong>Thank you for helping us improve.</strong>
+
+        <p>
+            Your feedback helps guide future KeepTrack improvements.
+        </p>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/feedback.js"
+            asp-append-version="true"></script>
+}
