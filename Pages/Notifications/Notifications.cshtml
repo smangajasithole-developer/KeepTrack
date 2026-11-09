@@ -123,7 +123,10 @@
                         </p>
 
                         <div class="notification-meta">
-                            @notification.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")
+                            @TimeZoneInfo.ConvertTimeFromUtc(
+                                DateTime.SpecifyKind(notification.CreatedAt, DateTimeKind.Utc),
+                                TimeZoneInfo.FindSystemTimeZoneById("South Africa Standard Time")
+                            ).ToString("dd MMM yyyy, HH:mm")
                         </div>
 
                     </div>
