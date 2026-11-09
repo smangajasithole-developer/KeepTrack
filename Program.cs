@@ -93,7 +93,10 @@ builder.Services.AddTransient<IEmailSender, BrevoEmailSender>();
 // BACKGROUND SERVICES
 // =====================================================
 
-builder.Services.AddHostedService<TaskReminderBackgroundService>();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHostedService<TaskReminderBackgroundService>();
+}
 
 var app = builder.Build();
 
