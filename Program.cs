@@ -98,6 +98,21 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddHostedService<TaskReminderBackgroundService>();
 }
 
+// =====================================================
+// HOSTING CONFIGURATION
+// =====================================================
+
+var port = Environment.GetEnvironmentVariable("PORT");
+
+if (!string.IsNullOrWhiteSpace(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
+// =====================================================
+// BUILD APPLICATION
+// =====================================================
+
 var app = builder.Build();
 
 // =====================================================
