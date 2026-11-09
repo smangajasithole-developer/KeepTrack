@@ -125,7 +125,7 @@
                         <div class="notification-meta">
                             @TimeZoneInfo.ConvertTimeFromUtc(
                                 DateTime.SpecifyKind(notification.CreatedAt, DateTimeKind.Utc),
-                                TimeZoneInfo.FindSystemTimeZoneById("South Africa Standard Time")
+                                TimeZoneInfo.FindSystemTimeZoneById("Africa/Johannesburg")
                             ).ToString("dd MMM yyyy, HH:mm")
                         </div>
 
