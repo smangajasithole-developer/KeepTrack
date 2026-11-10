@@ -220,8 +220,11 @@
                                                 @notification.Message
                                             </span>
 
-                                            <time datetime="@notification.CreatedAt.ToUniversalTime().ToString("O")">
-                                                @notification.CreatedAt.ToLocalTime().ToString("dd MMM, HH:mm")
+                                            <time datetime="@DateTime.SpecifyKind(notification.CreatedAt, DateTimeKind.Utc).ToString("O")">
+                                                @TimeZoneInfo.ConvertTimeFromUtc(
+                                                    DateTime.SpecifyKind(notification.CreatedAt, DateTimeKind.Utc),
+                                                    TimeZoneInfo.FindSystemTimeZoneById("Africa/Johannesburg")
+                                                ).ToString("dd MMM, HH:mm")
                                             </time>
                                         </span>
                                     </a>
