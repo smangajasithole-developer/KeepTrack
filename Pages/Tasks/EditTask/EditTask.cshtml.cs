@@ -490,9 +490,15 @@ public class EditTaskModel : PageModel
             return NotFound();
         }
 
-        DateTime? startDate = null;
+        DateTime? startDate;
 
-        if (!Input.StartImmediately)
+        if (Input.StartImmediately)
+        {
+            startDate = task.StartImmediately && task.StartDate.HasValue
+                ? task.StartDate
+                : DateTime.Now;
+        }
+        else
         {
             startDate = CombineDateAndTime(
                 Input.StartDate,
