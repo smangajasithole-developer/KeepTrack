@@ -455,6 +455,63 @@ select.edit-task-input {
 
 
 /* =====================================================
+   REMINDER INTERVAL SPINNER
+   ===================================================== */
+
+.edit-task-interval-control {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+
+.edit-task-interval-control .edit-task-input {
+    flex: 1;
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+}
+
+.edit-task-interval-spinner {
+    display: flex;
+    flex-direction: column;
+    width: 38px;
+    flex-shrink: 0;
+    gap: 3px;
+}
+
+.edit-task-interval-arrow {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: 5px;
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.edit-task-interval-arrow:hover {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary);
+}
+
+.edit-task-interval-arrow:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+.edit-task-interval-arrow:active {
+    background: var(--kt-primary);
+    color: white;
+}
+
+/* =====================================================
    11. REMINDER OPTIONS BLOCK
    ===================================================== */
 

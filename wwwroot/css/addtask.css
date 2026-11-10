@@ -502,6 +502,62 @@ select.add-task-input {
     margin-top: 4px;
 }
 
+/* ---------- Reminder Interval Spinner ---------- */
+
+.add-task-interval-control {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+
+.add-task-interval-control .add-task-input {
+    flex: 1;
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+}
+
+.add-task-interval-spinner {
+    display: flex;
+    flex-direction: column;
+    width: 38px;
+    flex-shrink: 0;
+    gap: 3px;
+}
+
+.add-task-interval-arrow {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--kt-border-strong);
+    border-radius: 5px;
+    background: var(--kt-surface-alt);
+    color: var(--kt-text);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--kt-transition);
+}
+
+.add-task-interval-arrow:hover {
+    background: var(--kt-surface);
+    border-color: var(--kt-primary);
+    color: var(--kt-primary);
+}
+
+.add-task-interval-arrow:focus-visible {
+    outline: 2px solid var(--kt-primary);
+    outline-offset: 2px;
+}
+
+.add-task-interval-arrow:active {
+    background: var(--kt-primary);
+    color: white;
+}
+
+
 /* ---------- Validation ---------- */
 .add-task-validation {
     display: block;

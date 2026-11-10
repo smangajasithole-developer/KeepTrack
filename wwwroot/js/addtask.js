@@ -913,6 +913,193 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+
+    // =====================================================
+    // REMINDER INTERVAL INPUT
+    // =====================================================
+
+    if (reminderIntervalInput) {
+        const intervalSpinner = document.querySelector(
+            "#reminder-interval-field .add-task-interval-spinner"
+        );
+
+        let selectedSegment = 0;
+
+        function getIntervalParts() {
+            const parts = reminderIntervalInput.value.split(":");
+
+            return [
+                parts[0] || "00",
+                parts[1] || "00",
+                parts[2] || "00"
+            ];
+        }
+
+        function selectSegment(segment) {
+            const positions = [
+                [0, 2],
+                [3, 5],
+                [6, 8]
+            ];
+
+            selectedSegment = segment;
+            reminderIntervalInput.focus();
+
+            reminderIntervalInput.setSelectionRange(
+                positions[segment][0],
+                positions[segment][1]
+            );
+        }
+
+        function updateSelectedSegment() {
+            const position =
+                reminderIntervalInput.selectionStart ?? 0;
+
+            if (position <= 2) {
+                selectedSegment = 0;
+            } else if (position <= 5) {
+                selectedSegment = 1;
+            } else {
+                selectedSegment = 2;
+            }
+        }
+
+        function formatIntervalDigits() {
+            const oldPosition =
+                reminderIntervalInput.selectionStart ?? 0;
+
+            const digitsBeforeCursor =
+                reminderIntervalInput.value
+                    .slice(0, oldPosition)
+                    .replace(/\D/g, "").length;
+
+            const digits = reminderIntervalInput.value
+                .replace(/\D/g, "")
+                .slice(0, 6);
+
+            let formatted = "";
+
+            if (digits.length <= 2) {
+                formatted = digits;
+
+                if (digits.length === 2) {
+                    formatted += ":";
+                }
+            } else if (digits.length <= 4) {
+                formatted =
+                    digits.slice(0, 2) + ":" +
+                    digits.slice(2);
+
+                if (digits.length === 4) {
+                    formatted += ":";
+                }
+            } else {
+                formatted =
+                    digits.slice(0, 2) + ":" +
+                    digits.slice(2, 4) + ":" +
+                    digits.slice(4, 6);
+            }
+
+            reminderIntervalInput.value = formatted;
+
+            let newPosition = 0;
+            let digitCount = 0;
+
+            while (
+                newPosition < formatted.length &&
+                digitCount < digitsBeforeCursor
+            ) {
+                if (/\d/.test(formatted[newPosition])) {
+                    digitCount++;
+                }
+
+                newPosition++;
+            }
+
+            // Move the caret past an automatically inserted colon.
+            if (
+                (digitsBeforeCursor === 2 ||
+                    digitsBeforeCursor === 4) &&
+                formatted[newPosition] === ":"
+            ) {
+                newPosition++;
+            }
+
+            reminderIntervalInput.setSelectionRange(
+                newPosition,
+                newPosition
+            );
+
+            updateSelectedSegment();
+        }
+
+        function adjustIntervalSegment(direction) {
+            const parts = getIntervalParts();
+
+            const limits = [24, 60, 60];
+
+            let value =
+                parseInt(parts[selectedSegment], 10) || 0;
+
+            value =
+                (value + direction + limits[selectedSegment]) %
+                limits[selectedSegment];
+
+            parts[selectedSegment] =
+                String(value).padStart(2, "0");
+
+            reminderIntervalInput.value = parts.join(":");
+
+            selectSegment(selectedSegment);
+        }
+
+        reminderIntervalInput.addEventListener(
+            "input",
+            formatIntervalDigits
+        );
+
+        reminderIntervalInput.addEventListener(
+            "click",
+            updateSelectedSegment
+        );
+
+        reminderIntervalInput.addEventListener(
+            "keyup",
+            updateSelectedSegment
+        );
+
+        reminderIntervalInput.addEventListener(
+            "select",
+            updateSelectedSegment
+        );
+
+        if (intervalSpinner) {
+            intervalSpinner.addEventListener(
+                "pointerdown",
+                event => event.preventDefault()
+            );
+
+            intervalSpinner.addEventListener(
+                "click",
+                event => {
+                    const button = event.target.closest(
+                        "[data-interval-action]"
+                    );
+
+                    if (!button) return;
+
+                    const direction =
+                        button.dataset.intervalAction === "increase"
+                            ? 1
+                            : -1;
+
+                    adjustIntervalSegment(direction);
+                }
+            );
+        }
+    }
+
     // =====================================================
     // INITIALIZE
     // =====================================================

@@ -1,5 +1,6 @@
 
 @page "/Tasks/AddTask"
+
 @model keeptrack.Pages.Tasks.AddTask.AddTaskModel
 
 @{
@@ -15,11 +16,10 @@
 <div class="add-task-page">
 
     <div class="add-task-header">
+
         <div>
             <span class="add-task-eyebrow">TASK MANAGEMENT</span>
-
             <h1>Add Task</h1>
-
             <p>
                 Create a new task and keep track of what needs to be done.
             </p>
@@ -31,6 +31,7 @@
                 Back to Tasks
             </a>
         </div>
+
     </div>
 
     <section class="add-task-card">
@@ -50,7 +51,6 @@
 
                 <div class="add-task-section-header">
                     <h2>Task Details</h2>
-
                     <p>
                         Give your task a clear title and description.
                     </p>
@@ -92,14 +92,11 @@
             <div class="add-task-form-section">
 
                 <div class="add-task-section-header">
-
                     <h2>Schedule Your Task</h2>
-
                     <p>
                         Choose when to start and when the task should be completed.
                         You can start immediately or schedule it for later.
                     </p>
-
                 </div>
 
                 <div class="add-task-form-group">
@@ -109,25 +106,19 @@
                     <div class="add-task-radio-group">
 
                         <label class="add-task-radio-option">
-
                             <input asp-for="Input.StartImmediately"
                                    type="radio"
                                    value="true"
                                    id="start-right-away" />
-
                             <span>Start right away</span>
-
                         </label>
 
                         <label class="add-task-radio-option">
-
                             <input asp-for="Input.StartImmediately"
                                    type="radio"
                                    value="false"
                                    id="start-scheduled" />
-
                             <span>Schedule for later</span>
-
                         </label>
 
                     </div>
@@ -162,9 +153,7 @@
                                         class="add-task-date-picker-button"
                                         data-date-picker-target="scheduled-start-date"
                                         aria-label="Choose scheduled start date">
-
-                                    <span aria-hidden="true">&#128197;</span>
-
+                                    <span aria-hidden="true">📅</span>
                                 </button>
 
                                 <input asp-for="Input.StartDate"
@@ -233,9 +222,7 @@
                                         class="add-task-date-picker-button"
                                         data-date-picker-target="task-due-date"
                                         aria-label="Choose due date">
-
-                                    <span aria-hidden="true">&#128197;</span>
-
+                                    <span aria-hidden="true">📅</span>
                                 </button>
 
                                 <input asp-for="Input.DueDate"
@@ -286,14 +273,11 @@
             <div class="add-task-form-section">
 
                 <div class="add-task-section-header">
-
                     <h2>Reminders</h2>
-
                     <p>
                         Want a reminder? Set how often you would like to be
                         reminded while your task is in progress.
                     </p>
-
                 </div>
 
                 <div class="add-task-form-group">
@@ -312,9 +296,7 @@
                            class="add-task-reminder-note"
                            role="status"
                            aria-live="polite">
-
                         Add a valid due date and due time before enabling reminders.
-
                     </small>
 
                 </div>
@@ -329,9 +311,7 @@
                        class="add-task-reminder-note"
                        role="status"
                        aria-live="polite">
-
                         Add your task dates to see the available reminder options.
-
                     </p>
 
                     <div class="add-task-reminder-schedule">
@@ -422,16 +402,37 @@
                                 Reminder interval
                             </label>
 
-                            <input asp-for="Input.ReminderInterval"
-                                   type="text"
-                                   class="add-task-input"
-                                   id="reminder-interval"
-                                   placeholder="e.g. 00:30:00"
-                                   inputmode="numeric"
-                                   autocomplete="off"
-                                   maxlength="8"
-                                   pattern="[0-9]{2,}:[0-5][0-9]:[0-5][0-9]"
-                                   title="Enter hours:minutes:seconds. For example, 00:30:00 means every 30 minutes." />
+                            <div class="add-task-interval-control">
+
+                                <input asp-for="Input.ReminderInterval"
+                                       type="text"
+                                       class="add-task-input"
+                                       id="reminder-interval"
+                                       placeholder="e.g. 00:30:00"
+                                       inputmode="numeric"
+                                       autocomplete="off"
+                                       pattern="[0-9]{2,}:[0-5][0-9]:[0-5][0-9]"
+                                       title="Enter hours:minutes:seconds. For example, 00:30:00 means every 30 minutes." />
+
+                                <div class="add-task-interval-spinner">
+
+                                    <button type="button"
+                                            class="add-task-interval-arrow"
+                                            data-interval-action="increase"
+                                            aria-label="Increase selected interval section">
+                                        ▲
+                                    </button>
+
+                                    <button type="button"
+                                            class="add-task-interval-arrow"
+                                            data-interval-action="decrease"
+                                            aria-label="Decrease selected interval section">
+                                        ▼
+                                    </button>
+
+                                </div>
+
+                            </div>
 
                             <span asp-validation-for="Input.ReminderInterval"
                                   class="add-task-validation"></span>
